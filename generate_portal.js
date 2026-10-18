@@ -226,7 +226,8 @@ function buildPortal() {
 </html>`;
 
   fs.writeFileSync('portal.html', page);
-  console.log('Built portal.html successfully!');
+  fs.writeFileSync('connect.html', page);
+  console.log('Built portal.html & connect.html successfully!');
 
   // Alias auth.html to portal.html so any legacy link arrives at the social portal
   fs.writeFileSync('auth.html', page);

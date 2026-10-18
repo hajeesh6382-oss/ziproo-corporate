@@ -274,7 +274,8 @@ function buildLeaders() {
 </html>`;
 
   fs.writeFileSync('leaders.html', page);
-  console.log('Built leaders.html successfully!');
+  fs.writeFileSync('leadership.html', page);
+  console.log('Built leaders.html & leadership.html successfully!');
 }
 
 buildLeaders();
