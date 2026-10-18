@@ -5,7 +5,7 @@ const urlMap = JSON.parse(fs.readFileSync('url_mapping.json', 'utf8'));
 
 // Universal Navigation links config (5 primary pages as requested)
 const NAV_ITEMS = [
-  { id: 'home', label: 'Home', href: '/', route: '/', file: 'index.html', icon: 'home' },
+  { id: 'home', label: 'Home', href: '/home', route: '/home', file: 'home.html', icon: 'home' },
   { id: 'branches', label: 'Branches', href: '/branches', route: '/branches', file: 'branches.html', icon: 'store' },
   { id: 'updates', label: 'Updates', href: '/updates', route: '/updates', file: 'updates.html', icon: 'description' },
   { id: 'leadership', label: 'Leadership', href: '/leadership', route: '/leadership', file: 'leaders.html', icon: 'corporate_fare' },
@@ -32,17 +32,21 @@ function getHeader(activeId, pageTitle) {
     <header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl border-b border-outline-variant/30 transition-colors">
       <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-6">
         <!-- Brand Identity: Logo & Enterprise Architecture moved left with ample spacing -->
-        <a href="/" data-route="/" class="flex items-center gap-3 group shrink-0 mr-4 md:mr-8" title="Ziproo Corporate - Home">
-          <img alt="Ziproo Official Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="${urlMap[Object.keys(urlMap)[0]] || 'assets/asset_1.webp'}"/>
+        <a href="/home" data-route="/home" class="flex items-center gap-3 group shrink-0 mr-4 md:mr-8" title="Ziproo Corporate - Home">
+          <img alt="Ziproo Official Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="${urlMap[Object.keys(urlMap)[0]] || 'assets/ziproo_logo.png'}"/>
           <div class="flex flex-col text-left">
             <span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none font-bold">Ziproo</span>
             <span class="font-tagline-display text-[9px] text-secondary tracking-widest uppercase leading-none mt-0.5">Enterprise Architecture</span>
           </div>
         </a>
 
-        <!-- Desktop Navigation Bar (5 Primary Tabs: Home, Branches, Updates, Leadership, Connect) -->
+        <!-- Desktop Navigation Bar (5 Primary Tabs: Home, Branches, Updates, Leadership, Connect + Admin Console) -->
         <nav class="hidden md:flex items-center gap-1 bg-surface-container-low/70 px-2.5 py-1 rounded-2xl border border-outline-variant/20 shadow-inner ml-2 md:ml-4" id="main-nav-links">
           ${desktopLinks}
+          <a href="/admin" data-route="/admin" id="nav-desktop-admin" class="hidden nav-tab text-label-md font-medium px-3.5 py-2 rounded-xl transition-all items-center gap-1.5 text-secondary font-bold bg-secondary-container/10">
+            <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+            <span>Console</span>
+          </a>
         </nav>
 
         <!-- Right Controls -->
@@ -95,8 +99,8 @@ function getHeader(activeId, pageTitle) {
     <div id="mobile-drawer" class="fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-surface-container-lowest shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out border-l border-outline-variant/30">
       <div class="flex flex-col gap-6 overflow-y-auto">
         <div class="flex items-center justify-between pb-4 border-b border-outline-variant/30">
-          <a href="/" data-route="/" class="flex items-center gap-2">
-            <img alt="Ziproo Logo" class="h-7 w-auto object-contain" src="${urlMap[Object.keys(urlMap)[0]] || 'assets/asset_1.webp'}"/>
+          <a href="/home" data-route="/home" class="flex items-center gap-2">
+            <img alt="Ziproo Logo" class="h-7 w-auto object-contain" src="${urlMap[Object.keys(urlMap)[0]] || 'assets/ziproo_logo.png'}"/>
             <span class="font-headline-sm text-primary font-bold">Ziproo</span>
           </a>
           <button data-action="close-menu" aria-label="Close menu" class="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container">
@@ -106,7 +110,7 @@ function getHeader(activeId, pageTitle) {
 
         <!-- Dynamic Mobile Auth Slot -->
         <div id="drawer-auth-slot" class="w-full">
-          <a href="/#auth-section" data-route="/#auth-section" id="drawer-signin-btn" class="w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
+          <a href="/" data-route="/" id="drawer-signin-btn" class="w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
             <span class="material-symbols-outlined text-[18px]">login</span>
             <span>Sign In / Create Account</span>
           </a>
@@ -145,6 +149,10 @@ function getHeader(activeId, pageTitle) {
           }">
             <span class="material-symbols-outlined text-[20px]">folder_special</span>
             <span>Our Projects</span>
+          </a>
+          <a href="/admin" id="drawer-admin-link" data-route="/admin" class="hidden drawer-nav-tab flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body-md font-bold text-secondary bg-secondary/10 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+            <span>Admin Console</span>
           </a>
         </nav>
       </div>
@@ -203,7 +211,7 @@ function getFooter(activeId) {
         
         <!-- Navbar & Other Links -->
         <div class="flex items-center gap-4 sm:gap-6 font-label-sm text-label-sm flex-wrap justify-center">
-          <a href="/" data-route="/" data-tab="home" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'home' ? 'text-secondary font-bold' : ''}">Home</a>
+          <a href="/home" data-route="/home" data-tab="home" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'home' ? 'text-secondary font-bold' : ''}">Home</a>
           <a href="/branches" data-route="/branches" data-tab="branches" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'branches' ? 'text-secondary font-bold' : ''}">Branches</a>
           <a href="/updates" data-route="/updates" data-tab="updates" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'updates' ? 'text-secondary font-bold' : ''}">Updates</a>
           <a href="/leadership" data-route="/leadership" data-tab="leadership" class="footer-nav-tab hover:text-primary transition-colors ${(activeId === 'leaders' || activeId === 'leadership') ? 'text-secondary font-bold' : ''}">Leadership</a>

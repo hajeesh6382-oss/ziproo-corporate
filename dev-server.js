@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const verifyAdminHandler = require('./api/verify-admin');
 
 // Simple .env parser without external dependencies
 function loadEnv() {
@@ -45,6 +46,31 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let cleanUrl = req.url.split('?')[0];
 
+  // Helper for JSON responses
+  res.json = (data) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(data));
+  };
+  res.status = (code) => {
+    res.statusCode = code;
+    return res;
+  };
+
+  // API: Admin Verification (Server-Side)
+  if (cleanUrl === '/api/verify-admin') {
+    let bodyStr = '';
+    req.on('data', chunk => { bodyStr += chunk; });
+    req.on('end', () => {
+      try {
+        req.body = bodyStr ? JSON.parse(bodyStr) : {};
+      } catch (e) {
+        req.body = {};
+      }
+      verifyAdminHandler(req, res);
+    });
+    return;
+  }
+
   // API endpoints
   if (cleanUrl === '/api/supabase-config') {
     res.writeHead(200, {
@@ -69,11 +95,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-
   // Clean URL routing & aliases
   const ROUTE_ALIASES = {
     '/': '/index.html',
-    '/home': '/index.html',
+    '/auth': '/index.html',
+    '/login': '/index.html',
+    '/signup': '/index.html',
+    '/admin-login': '/index.html',
+    '/home': '/home.html',
+    '/admin': '/admin.html',
     '/branches': '/branches.html',
     '/updates': '/updates.html',
     '/leadership': '/leaders.html',

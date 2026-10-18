@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>ZIPROO - Sovereign Identity & Authentication Gateway</title>
+  <meta name="description" content="Secure corporate authentication gateway and zero-trust identity architecture for Ziproo Enterprise Network."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/"/>
+  <meta property="og:title" content="ZIPROO - Sovereign Identity Gateway"/>
+  <meta property="og:description" content="Secure corporate authentication gateway and zero-trust identity architecture."/>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CDN & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-container": "#a3a4a4",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#8c1900",
+            "on-tertiary-fixed": "#1a1c1c",
+            "tertiary": "#232525",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#f9f9f9",
+            "on-background": "#1a1c1c",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f3",
+            "error": "#ba1a1a",
+            "surface-tint": "#5f5e5e",
+            "on-error": "#ffffff",
+            "inverse-primary": "#c8c6c6",
+            "outline": "#747878",
+            "on-secondary-container": "#570c00",
+            "surface-container": "#eeeeee",
+            "inverse-surface": "#2f3131",
+            "primary-fixed": "#e4e2e1",
+            "surface-variant": "#e2e2e2",
+            "on-primary-container": "#a5a4a3",
+            "inverse-on-surface": "#f1f1f1",
+            "on-surface": "#1a1c1c",
+            "surface-container-highest": "#e2e2e2",
+            "surface": "#f9f9f9",
+            "tertiary-fixed-dim": "#c6c6c6",
+            "secondary": "#b52603",
+            "on-secondary-fixed": "#3d0600",
+            "secondary-fixed": "#ffdad2",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e8e8e8",
+            "tertiary-container": "#383a3b",
+            "surface-dim": "#dadada",
+            "on-tertiary-fixed-variant": "#454747",
+            "on-primary": "#ffffff",
+            "on-primary-fixed-variant": "#474747",
+            "outline-variant": "#c4c7c7",
+            "primary-container": "#3a3a3a",
+            "on-primary-fixed": "#1b1c1c",
+            "background": "#f9f9f9",
+            "primary-fixed-dim": "#c8c6c6",
+            "secondary-container": "#fd5835",
+            "tertiary-fixed": "#e2e2e2",
+            "secondary-fixed-dim": "#ffb4a3",
+            "primary": "#242525",
+            "on-surface-variant": "#444748"
+          },
+          fontFamily: {
+            "headline-xl": ["Outfit"],
+            "headline-lg": ["Outfit"],
+            "headline-md": ["Outfit"],
+            "headline-sm": ["Outfit"],
+            "tagline-display": ["Outfit"],
+            "display": ["Outfit"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"]
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .auth-bg-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(253, 88, 53, 0.12) 0%, rgba(36, 37, 37, 0.04) 50%, transparent 80%);
+    }
+    .dark .auth-bg-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(253, 88, 53, 0.18) 0%, rgba(15, 17, 23, 0.6) 60%, transparent 85%);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen transition-colors duration-200">
+
+  <!-- Top Minimalist Brand Header (NO navigation bar before authentication) -->
+  <header class="w-full pt-safe bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <img alt="Ziproo Official Logo" class="h-8 w-auto object-contain" src="assets/ziproo_logo.png"/>
+        <div class="flex flex-col text-left">
+          <span class="font-headline-sm text-headline-sm text-primary dark:text-white tracking-tight leading-none font-bold">Ziproo</span>
+          <span class="font-tagline-display text-[9px] text-secondary tracking-widest uppercase leading-none mt-0.5">Enterprise Architecture</span>
+        </div>
+      </div>
+
+      <!-- Right Controls: Theme Toggle & Security Status -->
+      <div class="flex items-center gap-2.5">
+        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant text-[11px] font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Zero-Trust Gateway Online</span>
+        </div>
+        <button aria-label="Toggle Theme" data-action="toggle-theme" class="min-w-[38px] min-h-[38px] flex items-center justify-center rounded-xl bg-surface-container-high/60 text-on-surface-variant transition-all hover:bg-surface-container-highest hover:text-on-surface active:scale-90" type="button" title="Toggle Dark/Light Mode">
+          <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Authentication Gateway Screen -->
+  <main class="flex-1 flex flex-col items-center justify-center relative w-full px-4 sm:px-6 py-8 sm:py-12 auth-bg-glow">
+    
+    <!-- Background Accents -->
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
+
+    <div class="w-full max-w-lg relative z-10 space-y-6">
+
+      <!-- Monogram & Title -->
+      <div class="flex flex-col items-center text-center space-y-2">
+        <div class="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-primary text-on-primary shadow-xl shadow-primary/20">
+          <span class="font-headline-lg font-extrabold tracking-tighter text-secondary-container">Z</span>
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-sm">
+            <span class="w-2.5 h-2.5 rounded-full bg-secondary-container animate-ping opacity-75"></span>
+            <span class="absolute w-2 h-2 rounded-full bg-secondary-container"></span>
+          </span>
+        </div>
+        
+        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-secondary-container/10 border border-secondary-container/20 text-secondary text-[11px] font-bold uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[13px]">shield</span>
+          <span>Sovereign Identity Protocol 2026</span>
+        </div>
+
+        <h1 class="font-headline-xl text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+          ACCESS CLEARANCE GATEWAY
+        </h1>
+        <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-sm leading-relaxed">
+          Authenticate to enter the Ziproo sovereign network. All enterprise partitions require verified clearance.
+        </p>
+      </div>
+
+      <!-- Redirect Reason Banner (If redirected from protected page) -->
+      <div id="auth-redirect-notice" class="hidden p-3.5 rounded-2xl bg-secondary-container/10 border border-secondary-container/30 text-on-surface flex items-start gap-3 text-left">
+        <span class="material-symbols-outlined text-secondary-container text-[20px] shrink-0 mt-0.5">lock</span>
+        <div class="flex flex-col text-xs leading-relaxed">
+          <span class="font-bold text-secondary-container">Protected Route</span>
+          <span id="auth-redirect-msg" class="text-on-surface-variant">Please authenticate to access enterprise pages.</span>
+        </div>
+      </div>
+
+      <!-- Main Segmented Control: USER LOGIN vs ADMIN LOGIN -->
+      <div class="p-1 rounded-2xl bg-surface-container-high border border-outline-variant/30 grid grid-cols-2 gap-1 shadow-inner">
+        <button id="btn-mode-user" type="button" class="py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-surface-container-lowest text-on-surface shadow-sm">
+          <span class="material-symbols-outlined text-[18px] text-secondary">person</span>
+          <span>User Login</span>
+        </button>
+        <button id="btn-mode-admin" type="button" class="py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-on-surface-variant hover:text-on-surface">
+          <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+          <span>Admin Login</span>
+        </button>
+      </div>
+
+      <!-- Global Feedback Notification Banner -->
+      <div id="auth-global-feedback" class="hidden text-xs p-3.5 rounded-2xl font-medium border text-left flex items-start gap-2.5">
+        <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5" id="auth-feedback-icon">info</span>
+        <span class="flex-1 leading-relaxed" id="auth-feedback-text"></span>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SECTION 1: USER / MEMBER AUTHENTICATION    -->
+      <!-- ========================================== -->
+      <div id="section-user-auth" class="space-y-4">
+
+        <!-- Sub Tabs: Sign In vs Sign Up -->
+        <div class="flex items-center justify-between bg-surface-container-low px-2 py-1.5 rounded-2xl border border-outline-variant/20">
+          <div class="flex items-center gap-1">
+            <button id="user-subtab-signin" type="button" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-primary text-on-primary shadow-sm transition-all">
+              Sign In
+            </button>
+            <button id="user-subtab-signup" type="button" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface transition-all">
+              Create Account
+            </button>
+          </div>
+          <span class="text-[11px] text-on-surface-variant px-2 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+            Member Portal
+          </span>
+        </div>
+
+        <!-- 1A: USER SIGN IN FORM -->
+        <div id="card-user-signin" class="bg-surface-container-lowest p-6 sm:p-7 rounded-3xl shadow-lg border border-outline-variant/30 space-y-4">
+          <div class="text-left space-y-0.5">
+            <h2 class="font-headline-sm text-base sm:text-lg font-bold text-on-surface">Sign In to Your Account</h2>
+            <p class="text-xs text-on-surface-variant">Enter your corporate credentials to unlock your workspace.</p>
+          </div>
+
+          <form id="form-user-signin" class="space-y-3.5 text-left" novalidate>
+            <!-- Email -->
+            <div class="space-y-1">
+              <label for="signin-email" class="block text-xs font-semibold text-on-surface-variant">Corporate or Personal Email</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">mail</span>
+                <input id="signin-email" type="email" required placeholder="alex@ziproo.internal" autocomplete="email"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+              </div>
+              <span id="err-signin-email" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="signin-password" class="block text-xs font-semibold text-on-surface-variant">Password</label>
+                <button type="button" id="btn-show-forgot-pwd" class="text-xs text-secondary hover:underline font-semibold">Forgot Password?</button>
+              </div>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">lock</span>
+                <input id="signin-password" type="password" required placeholder="••••••••••••" autocomplete="current-password"
+                  class="w-full h-11 pl-10 pr-11 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+                <button type="button" data-toggle="password" class="absolute right-3 text-outline hover:text-on-surface p-1 flex items-center justify-center" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-[19px]">visibility</span>
+                </button>
+              </div>
+              <span id="err-signin-password" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center justify-between pt-0.5">
+              <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-on-surface">
+                <input id="signin-remember" type="checkbox" checked class="w-4 h-4 rounded accent-secondary-container"/>
+                <span>Remember this session</span>
+              </label>
+              <span class="text-[11px] text-outline flex items-center gap-1 font-mono">
+                <span class="material-symbols-outlined text-[14px] text-emerald-500">lock</span>
+                TLS Encrypted
+              </span>
+            </div>
+
+            <!-- Submit CTA -->
+            <button id="btn-user-signin-submit" type="submit" class="w-full h-12 rounded-xl bg-secondary-container text-on-secondary font-label-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:opacity-90 active:scale-[0.99] transition-all">
+              <span class="btn-text">Sign In to Ziproo</span>
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </form>
+
+          <!-- Quick Test Credentials helper -->
+          <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between">
+            <span class="text-[11px] text-outline">Testing environment:</span>
+            <button type="button" id="btn-prefill-user" class="text-[11px] font-semibold text-secondary hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">auto_fix_high</span>
+              <span>Fill User Demo Credentials</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1B: USER SIGN UP / REGISTRATION FORM (Default Hidden) -->
+        <div id="card-user-signup" class="hidden bg-surface-container-lowest p-6 sm:p-7 rounded-3xl shadow-lg border border-outline-variant/30 space-y-4">
+          <div class="text-left space-y-0.5">
+            <h2 class="font-headline-sm text-base sm:text-lg font-bold text-on-surface">Create New Identity</h2>
+            <p class="text-xs text-on-surface-variant">Register your zero-trust corporate profile with password confirmation.</p>
+          </div>
+
+          <form id="form-user-signup" class="space-y-3.5 text-left" novalidate>
+            <!-- Full Name -->
+            <div class="space-y-1">
+              <label for="signup-name" class="block text-xs font-semibold text-on-surface-variant">Full Legal Name</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">badge</span>
+                <input id="signup-name" type="text" required placeholder="Elena Rostova" autocomplete="name"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+              </div>
+              <span id="err-signup-name" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-1">
+              <label for="signup-email" class="block text-xs font-semibold text-on-surface-variant">Corporate Email Address</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">alternate_email</span>
+                <input id="signup-email" type="email" required placeholder="elena.rostova@company.com" autocomplete="email"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+              </div>
+              <span id="err-signup-email" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-1">
+              <label for="signup-password" class="block text-xs font-semibold text-on-surface-variant">Master Key Password (Min 8 characters)</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">key</span>
+                <input id="signup-password" type="password" required placeholder="••••••••••••" autocomplete="new-password"
+                  class="w-full h-11 pl-10 pr-11 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+                <button type="button" data-toggle="password" class="absolute right-3 text-outline hover:text-on-surface p-1 flex items-center justify-center" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-[19px]">visibility</span>
+                </button>
+              </div>
+              
+              <!-- Password Strength Meter -->
+              <div class="pt-1 space-y-1">
+                <div class="flex items-center gap-1.5 h-1.5 w-full">
+                  <div id="meter-bar-1" class="h-full flex-1 rounded-full bg-surface-container-highest transition-colors"></div>
+                  <div id="meter-bar-2" class="h-full flex-1 rounded-full bg-surface-container-highest transition-colors"></div>
+                  <div id="meter-bar-3" class="h-full flex-1 rounded-full bg-surface-container-highest transition-colors"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-outline">
+                  <span id="meter-text">Strength: Minimum 8 chars</span>
+                  <span>Uppercase, number & symbol</span>
+                </div>
+              </div>
+              <span id="err-signup-password" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Confirm Password (MANDATORY REQUIREMENT) -->
+            <div class="space-y-1">
+              <label for="signup-confirm-password" class="block text-xs font-semibold text-on-surface-variant">Confirm Password</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">lock_reset</span>
+                <input id="signup-confirm-password" type="password" required placeholder="Re-enter password" autocomplete="new-password"
+                  class="w-full h-11 pl-10 pr-11 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+                <button type="button" data-toggle="password" class="absolute right-3 text-outline hover:text-on-surface p-1 flex items-center justify-center" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-[19px]">visibility</span>
+                </button>
+              </div>
+              <span id="err-signup-confirm" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <!-- Terms & Protocol Agreement -->
+            <label class="flex items-start gap-2.5 pt-1 cursor-pointer select-none text-left">
+              <input id="signup-terms" type="checkbox" required checked class="mt-1 w-4 h-4 rounded accent-secondary-container shrink-0"/>
+              <span class="text-xs text-on-surface-variant leading-relaxed">
+                I agree to the <span class="text-on-surface font-semibold">Ziproo Identity Terms</span>, privacy audit guidelines, and cryptographic access protocol.
+              </span>
+            </label>
+            <span id="err-signup-terms" class="hidden text-[11px] text-error font-medium pl-1"></span>
+
+            <!-- Submit CTA -->
+            <button id="btn-user-signup-submit" type="submit" class="w-full h-12 rounded-xl bg-secondary-container text-on-secondary font-label-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:opacity-90 active:scale-[0.99] transition-all">
+              <span class="btn-text">Create Ziproo Identity</span>
+              <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 1C: FORGOT PASSWORD VIEW (Default Hidden) -->
+        <div id="card-user-forgot" class="hidden bg-surface-container-lowest p-6 sm:p-7 rounded-3xl shadow-lg border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-[22px]">lock_reset</span>
+              <h2 class="font-headline-sm text-base font-bold text-on-surface">Reset Password</h2>
+            </div>
+            <button type="button" id="btn-back-to-signin" class="text-xs text-secondary font-semibold hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span>Back to Sign In</span>
+            </button>
+          </div>
+
+          <p class="text-xs text-on-surface-variant text-left leading-relaxed">
+            Enter your registered email address. We will dispatch zero-knowledge password recovery instructions.
+          </p>
+
+          <form id="form-forgot-password" class="space-y-3.5 text-left" novalidate>
+            <div class="space-y-1">
+              <label for="forgot-email" class="block text-xs font-semibold text-on-surface-variant">Registered Email</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[19px] pointer-events-none">mail</span>
+                <input id="forgot-email" type="email" required placeholder="name@company.com"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface text-xs sm:text-sm border border-outline-variant/30 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary outline-none transition-all placeholder:text-outline"/>
+              </div>
+              <span id="err-forgot-email" class="hidden text-[11px] text-error font-medium pl-1"></span>
+            </div>
+
+            <button id="btn-forgot-submit" type="submit" class="w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:opacity-90 active:scale-[0.99] transition-all">
+              <span class="btn-text">Dispatch Password Reset</span>
+              <span class="material-symbols-outlined text-[18px]">send</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SECTION 2: ADMIN / OPERATOR AUTHENTICATION -->
+      <!-- ========================================== -->
+      <div id="section-admin-auth" class="hidden space-y-4">
+        
+        <!-- High Security Operations Console Card -->
+        <div class="bg-primary text-on-primary p-6 sm:p-7 rounded-3xl shadow-2xl border border-secondary-container/40 relative overflow-hidden space-y-5">
+          <!-- Background Glow Mesh -->
+          <div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
+
+          <!-- Top Clearance Indicator -->
+          <div class="flex items-center justify-between pb-3 border-b border-surface-container-high/30">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-secondary-container animate-ping"></span>
+              <span class="font-tagline-display text-[10px] tracking-widest text-secondary-fixed uppercase font-bold">Root Operations Gateway</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-secondary-fixed text-[11px] font-mono font-bold border border-secondary-container/30">
+              Tier IV Clearance
+            </span>
+          </div>
+
+          <div class="text-left space-y-1">
+            <h2 class="font-headline-lg text-xl sm:text-2xl font-extrabold text-on-primary tracking-tight">
+              Enterprise Operations Console
+            </h2>
+            <p class="text-xs text-on-primary-container leading-relaxed">
+              Restricted administrative partition. Admin status is validated by the server backend. Unauthorized access attempts will be rejected.
+            </p>
+          </div>
+
+          <form id="form-admin-login" class="space-y-3.5 text-left" novalidate>
+            <!-- Admin Identifier or Email -->
+            <div class="space-y-1">
+              <label for="admin-email" class="block text-xs font-semibold text-on-primary-container">Admin ID or Corporate Email</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-on-primary-container text-[19px] pointer-events-none">shield_person</span>
+                <input id="admin-email" type="email" required placeholder="admin@ziproo.com" autocomplete="username"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-tertiary-container text-on-primary text-xs sm:text-sm border border-surface-container-high/40 focus:ring-2 focus:ring-secondary-container outline-none transition-all placeholder:text-outline"/>
+              </div>
+              <span id="err-admin-email" class="hidden text-[11px] text-error-container font-medium pl-1"></span>
+            </div>
+
+            <!-- Master Vault Key -->
+            <div class="space-y-1">
+              <label for="admin-password" class="block text-xs font-semibold text-on-primary-container">Master Keyphrase</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-on-primary-container text-[19px] pointer-events-none">encrypted</span>
+                <input id="admin-password" type="password" required placeholder="••••••••••••" autocomplete="current-password"
+                  class="w-full h-11 pl-10 pr-11 rounded-xl bg-tertiary-container text-on-primary text-xs sm:text-sm border border-surface-container-high/40 focus:ring-2 focus:ring-secondary-container outline-none transition-all placeholder:text-outline"/>
+                <button type="button" data-toggle="password" class="absolute right-3 text-on-primary-container hover:text-on-primary p-1 flex items-center justify-center" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-[19px]">visibility</span>
+                </button>
+              </div>
+              <span id="err-admin-password" class="hidden text-[11px] text-error-container font-medium pl-1"></span>
+            </div>
+
+            <!-- Hardware Security Token / MFA PIN -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="admin-mfa" class="block text-xs font-semibold text-on-primary-container">Hardware Security Key / MFA Code</label>
+                <span class="text-[11px] text-secondary-fixed font-mono">FIDO2 / TOTP</span>
+              </div>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3.5 text-on-primary-container text-[19px] pointer-events-none">fingerprint</span>
+                <input id="admin-mfa" type="text" placeholder="6-digit MFA (e.g. 789012)" value="789012"
+                  class="w-full h-11 pl-10 pr-4 rounded-xl bg-tertiary-container text-on-primary text-xs sm:text-sm font-mono tracking-widest border border-surface-container-high/40 focus:ring-2 focus:ring-secondary-container outline-none transition-all placeholder:text-outline"/>
+              </div>
+            </div>
+
+            <!-- Admin Submit CTA -->
+            <button id="btn-admin-login-submit" type="submit" class="w-full h-12 mt-2 rounded-xl bg-secondary-container text-on-secondary font-label-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-secondary-container/30 hover:opacity-95 active:scale-[0.99] transition-all">
+              <span class="btn-text">Verify Admin Clearance & Initialize Console</span>
+              <span class="material-symbols-outlined text-[18px]">verified_user</span>
+            </button>
+          </form>
+
+          <!-- Quick Test Admin helper -->
+          <div class="pt-2 border-t border-surface-container-high/30 flex items-center justify-between">
+            <span class="text-[11px] text-on-primary-container">Admin Test Profile:</span>
+            <button type="button" id="btn-prefill-admin" class="text-[11px] font-semibold text-secondary-fixed hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">auto_fix_high</span>
+              <span>Fill Admin Demo Credentials</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Security Protocol Footer -->
+      <div class="pt-4 text-center space-y-1">
+        <p class="text-[11px] text-outline font-mono">
+          ZIPROO SECURE IDENTITY PROTOCOL • 256-BIT AUDITED SESSION
+        </p>
+        <p class="text-[11px] text-on-surface-variant">
+          Protected by role-based server-side access control.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Global Footer Bar -->
+  <footer class="w-full py-4 bg-surface-container-lowest/80 border-t border-outline-variant/20 text-center text-xs text-outline">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>&copy; 2026 Ziproo Corporate Architecture. All rights reserved.</span>
+      <div class="flex items-center gap-4">
+        <span class="text-[11px] text-on-surface-variant font-mono">Zero-Trust v2.4</span>
+        <span class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          All Systems Operational
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="js/social-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

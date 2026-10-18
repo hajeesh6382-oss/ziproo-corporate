@@ -284,7 +284,7 @@
 
     // Check Visitor demo credentials
     if (cleanEmail === DEMO_CREDENTIALS.visitor.email.toLowerCase() && password === DEMO_CREDENTIALS.visitor.password) {
-      return { valid: true, user: DEMO_CREDENTIALS.visitor, isAdmin: false, target: 'index.html' };
+      return { valid: true, user: DEMO_CREDENTIALS.visitor, isAdmin: false, target: 'home.html' };
     }
 
     // Check custom registered users from localStorage
@@ -294,9 +294,9 @@
       if (found) {
         return {
           valid: true,
-          user: { role: 'Visitor', email: found.email, name: found.name || 'Registered Visitor' },
-          isAdmin: false,
-          target: 'index.html'
+          user: { role: found.role || 'Visitor', email: found.email, name: found.name || 'Member' },
+          isAdmin: found.role === 'Admin',
+          target: found.role === 'Admin' ? 'admin.html' : 'home.html'
         };
       }
     } catch (e) {}
@@ -329,7 +329,7 @@
     }
 
     showToast(
-      result.isAdmin ? 'Admin session authorized. Edit mode ON.' : 'Logged in successfully',
+      result.isAdmin ? 'Admin session authorized. Launching console.' : 'Logged in successfully',
       result.isAdmin ? 'admin_panel_settings' : 'verified_user'
     );
 
@@ -363,7 +363,7 @@
     // Save registered user
     try {
       const registered = JSON.parse(localStorage.getItem(REGISTERED_USERS_KEY) || '[]');
-      registered.push({ name: name.trim(), email: email.trim().toLowerCase(), password: password.trim() });
+      registered.push({ name: name.trim(), email: email.trim().toLowerCase(), password: password.trim(), role: 'Visitor' });
       localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(registered));
     } catch (e) {}
 
@@ -380,7 +380,7 @@
     showToast('Account provisioned! Welcome to Ziproo.', 'how_to_reg');
 
     setTimeout(() => {
-      window.location.href = 'index.html';
+      window.location.href = 'home.html';
     }, 450);
 
     return true;
@@ -388,8 +388,11 @@
 
   function logout() {
     localStorage.removeItem(USER_KEY);
-    localStorage.setItem(ADMIN_KEY, 'false');
-    showToast('Logged out successfully', 'logout');
+    sessionStorage.removeItem(USER_KEY);
+    localStorage.removeItem(ADMIN_KEY);
+    localStorage.removeItem('ziproo_admin_token');
+    sessionStorage.removeItem('ziproo_admin_token');
+    showToast('Logged out of Ziproo Network', 'logout');
     syncAuthUI();
     setTimeout(() => {
       window.location.href = 'index.html';
@@ -554,9 +557,19 @@
   }
 
   // --- Client-Side Routing Engine ---
+  // --- Client-Side Routing Engine ---
   const ROUTE_MAP = {
-    '/': { file: 'index.html', id: 'home', title: 'Ziproo Corporate - Sovereign Identity & Enterprise Architecture' },
-    '/index.html': { file: 'index.html', id: 'home', title: 'Ziproo Corporate - Sovereign Identity & Enterprise Architecture' },
+    '/': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/index.html': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/auth': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/auth.html': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/login': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/signup': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/admin-login': { file: 'index.html', id: 'auth', title: 'Ziproo - Sovereign Identity Gateway' },
+    '/home': { file: 'home.html', id: 'home', title: 'Ziproo Corporate - Sovereign Identity & Enterprise Architecture' },
+    '/home.html': { file: 'home.html', id: 'home', title: 'Ziproo Corporate - Sovereign Identity & Enterprise Architecture' },
+    '/admin': { file: 'admin.html', id: 'admin', title: 'Operations Console & Admin Control Room - Ziproo' },
+    '/admin.html': { file: 'admin.html', id: 'admin', title: 'Operations Console & Admin Control Room - Ziproo' },
     '/branches': { file: 'branches.html', id: 'branches', title: 'Global Branches & Locations - Ziproo Enterprise Architecture' },
     '/branches.html': { file: 'branches.html', id: 'branches', title: 'Global Branches & Locations - Ziproo Enterprise Architecture' },
     '/updates': { file: 'updates.html', id: 'updates', title: 'About & Daily Updates - Ziproo Enterprise Architecture' },
@@ -580,7 +593,6 @@
     if (clean.startsWith('/ziproo-corporate')) {
       clean = clean.replace(/^\/ziproo-corporate/, '') || '/';
     }
-    if (clean === '' || clean === '/home') return '/';
     if (clean === '/leaders') return '/leadership';
     if (clean === '/portal') return '/connect';
     return clean;
@@ -659,6 +671,25 @@
   async function navigateTo(path, push = true) {
     const cleanRoute = normalizeRoute(path);
     const routeConfig = ROUTE_MAP[cleanRoute] || ROUTE_MAP['/'];
+    const user = getCurrentUser();
+
+    // Route Protection Guard
+    const PROTECTED_IDS = ['home', 'branches', 'updates', 'leadership', 'connect', 'projects', 'admin'];
+    if (PROTECTED_IDS.includes(routeConfig.id) && !user) {
+      window.location.href = `index.html?auth=required&target=${encodeURIComponent(cleanRoute)}`;
+      return;
+    }
+
+    if (routeConfig.id === 'admin' && (!user || user.role !== 'Admin')) {
+      showToast('Access Denied: Administrator clearance required.', 'lock');
+      window.location.href = 'home.html';
+      return;
+    }
+
+    if (routeConfig.id === 'auth' && user) {
+      window.location.href = user.role === 'Admin' ? 'admin.html' : 'home.html';
+      return;
+    }
 
     const targetUrl = (BASE_PATH + cleanRoute) || '/';
     if (push && window.location.pathname !== targetUrl) {
@@ -702,6 +733,372 @@
         applyAdminMode(isAdminMode());
       }, 100);
     }
+  }
+
+  // --- Auth Gateway Interactions (Dedicated Authentication Screen) ---
+  function initAuthGatewayInteractions() {
+    const btnModeUser = document.getElementById('btn-mode-user');
+    const btnModeAdmin = document.getElementById('btn-mode-admin');
+    const secUserAuth = document.getElementById('section-user-auth');
+    const secAdminAuth = document.getElementById('section-admin-auth');
+
+    if (!btnModeUser || !secUserAuth) return;
+
+    const subTabSignIn = document.getElementById('user-subtab-signin');
+    const subTabSignUp = document.getElementById('user-subtab-signup');
+    const cardSignIn = document.getElementById('card-user-signin');
+    const cardSignUp = document.getElementById('card-user-signup');
+    const cardForgot = document.getElementById('card-user-forgot');
+
+    const globalFeedback = document.getElementById('auth-global-feedback');
+    const feedbackIcon = document.getElementById('auth-feedback-icon');
+    const feedbackText = document.getElementById('auth-feedback-text');
+
+    function showFeedback(msg, type = 'error') {
+      if (!globalFeedback || !feedbackText) return;
+      feedbackText.textContent = msg;
+      if (type === 'error') {
+        globalFeedback.className = 'text-xs p-3.5 rounded-2xl font-medium border text-left flex items-start gap-2.5 bg-error-container/30 text-error border-error/30';
+        if (feedbackIcon) feedbackIcon.textContent = 'error';
+      } else if (type === 'success') {
+        globalFeedback.className = 'text-xs p-3.5 rounded-2xl font-medium border text-left flex items-start gap-2.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
+        if (feedbackIcon) feedbackIcon.textContent = 'check_circle';
+      } else {
+        globalFeedback.className = 'text-xs p-3.5 rounded-2xl font-medium border text-left flex items-start gap-2.5 bg-surface-container text-on-surface border-outline-variant/30';
+        if (feedbackIcon) feedbackIcon.textContent = 'info';
+      }
+      globalFeedback.classList.remove('hidden');
+    }
+
+    function clearFeedback() {
+      if (globalFeedback) globalFeedback.classList.add('hidden');
+    }
+
+    // Check URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+    const isAuthRequired = urlParams.get('auth') === 'required';
+    const targetRedirect = urlParams.get('target');
+
+    if (isAuthRequired) {
+      const notice = document.getElementById('auth-redirect-notice');
+      const noticeMsg = document.getElementById('auth-redirect-msg');
+      if (notice) notice.classList.remove('hidden');
+      if (noticeMsg && targetRedirect) {
+        noticeMsg.textContent = `Access to "${decodeURIComponent(targetRedirect)}" requires verified member credentials. Please sign in below.`;
+      }
+    }
+
+    // Toggle Modes (User vs Admin)
+    function setMode(mode) {
+      clearFeedback();
+      if (mode === 'admin') {
+        btnModeAdmin?.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+        btnModeAdmin?.classList.remove('text-on-surface-variant', 'font-semibold');
+        btnModeUser?.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+        btnModeUser?.classList.add('text-on-surface-variant', 'font-semibold');
+
+        secAdminAuth?.classList.remove('hidden');
+        secUserAuth?.classList.add('hidden');
+      } else {
+        btnModeUser?.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+        btnModeUser?.classList.remove('text-on-surface-variant', 'font-semibold');
+        btnModeAdmin?.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+        btnModeAdmin?.classList.add('text-on-surface-variant', 'font-semibold');
+
+        secUserAuth?.classList.remove('hidden');
+        secAdminAuth?.classList.add('hidden');
+      }
+    }
+
+    btnModeUser?.addEventListener('click', () => setMode('user'));
+    btnModeAdmin?.addEventListener('click', () => setMode('admin'));
+
+    // Toggle User Subtabs (Sign In vs Create Account vs Forgot)
+    function setUserSubtab(tab) {
+      clearFeedback();
+      if (tab === 'signup') {
+        subTabSignUp?.classList.add('bg-primary', 'text-on-primary', 'shadow-sm', 'font-bold');
+        subTabSignUp?.classList.remove('text-on-surface-variant', 'font-semibold');
+        subTabSignIn?.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm', 'font-bold');
+        subTabSignIn?.classList.add('text-on-surface-variant', 'font-semibold');
+
+        cardSignUp?.classList.remove('hidden');
+        cardSignIn?.classList.add('hidden');
+        cardForgot?.classList.add('hidden');
+      } else if (tab === 'forgot') {
+        cardForgot?.classList.remove('hidden');
+        cardSignIn?.classList.add('hidden');
+        cardSignUp?.classList.add('hidden');
+      } else {
+        subTabSignIn?.classList.add('bg-primary', 'text-on-primary', 'shadow-sm', 'font-bold');
+        subTabSignIn?.classList.remove('text-on-surface-variant', 'font-semibold');
+        subTabSignUp?.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm', 'font-bold');
+        subTabSignUp?.classList.add('text-on-surface-variant', 'font-semibold');
+
+        cardSignIn?.classList.remove('hidden');
+        cardSignUp?.classList.add('hidden');
+        cardForgot?.classList.add('hidden');
+      }
+    }
+
+    subTabSignIn?.addEventListener('click', () => setUserSubtab('signin'));
+    subTabSignUp?.addEventListener('click', () => setUserSubtab('signup'));
+    document.getElementById('btn-show-forgot-pwd')?.addEventListener('click', () => setUserSubtab('forgot'));
+    document.getElementById('btn-back-to-signin')?.addEventListener('click', () => setUserSubtab('signin'));
+
+    if (viewParam === 'admin' || window.location.pathname.includes('admin-login')) {
+      setMode('admin');
+    } else if (viewParam === 'signup' || window.location.pathname.includes('signup')) {
+      setUserSubtab('signup');
+    }
+
+    // Live Password Strength Meter
+    const signupPwdInput = document.getElementById('signup-password');
+    const meter1 = document.getElementById('meter-bar-1');
+    const meter2 = document.getElementById('meter-bar-2');
+    const meter3 = document.getElementById('meter-bar-3');
+    const meterText = document.getElementById('meter-text');
+
+    if (signupPwdInput && meter1 && meter2 && meter3) {
+      signupPwdInput.addEventListener('input', () => {
+        const val = signupPwdInput.value;
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val) && val.length >= 10) score++;
+
+        meter1.className = 'h-full flex-1 rounded-full transition-colors ' + (score >= 1 ? 'bg-secondary-container' : 'bg-surface-container-highest');
+        meter2.className = 'h-full flex-1 rounded-full transition-colors ' + (score >= 2 ? 'bg-secondary-container' : 'bg-surface-container-highest');
+        meter3.className = 'h-full flex-1 rounded-full transition-colors ' + (score >= 3 ? 'bg-emerald-500' : 'bg-surface-container-highest');
+
+        if (score === 0) meterText.textContent = 'Strength: Minimum 8 chars';
+        else if (score === 1) meterText.textContent = 'Strength: Fair (add number & uppercase)';
+        else if (score === 2) meterText.textContent = 'Strength: Good (add special symbol)';
+        else meterText.textContent = 'Strength: Strong (Tier III Clearance)';
+      });
+    }
+
+    // Prefill helper buttons
+    document.getElementById('btn-prefill-user')?.addEventListener('click', () => {
+      const emailEl = document.getElementById('signin-email');
+      const pwdEl = document.getElementById('signin-password');
+      if (emailEl) emailEl.value = 'user@ziproo.com';
+      if (pwdEl) pwdEl.value = 'User@123';
+      showToast('Demo User credentials filled: user@ziproo.com / User@123', 'auto_fix_high');
+    });
+
+    document.getElementById('btn-prefill-admin')?.addEventListener('click', () => {
+      const emailEl = document.getElementById('admin-email');
+      const pwdEl = document.getElementById('admin-password');
+      if (emailEl) emailEl.value = 'admin@ziproo.com';
+      if (pwdEl) pwdEl.value = 'Admin@123';
+      showToast('Demo Admin credentials filled: admin@ziproo.com / Admin@123', 'auto_fix_high');
+    });
+
+    // Form: User Sign In
+    document.getElementById('form-user-signin')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearFeedback();
+
+      const email = document.getElementById('signin-email')?.value.trim();
+      const password = document.getElementById('signin-password')?.value;
+      const remember = document.getElementById('signin-remember')?.checked;
+      const btn = document.getElementById('btn-user-signin-submit');
+      const origText = btn ? btn.innerHTML : '';
+
+      const errEmail = document.getElementById('err-signin-email');
+      const errPwd = document.getElementById('err-signin-password');
+      if (errEmail) errEmail.classList.add('hidden');
+      if (errPwd) errPwd.classList.add('hidden');
+
+      if (!email) {
+        if (errEmail) { errEmail.textContent = 'Email is required'; errEmail.classList.remove('hidden'); }
+        return;
+      }
+      if (!password) {
+        if (errPwd) { errPwd.textContent = 'Password is required'; errPwd.classList.remove('hidden'); }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Authenticating with Ziproo...</span>';
+      }
+
+      const res = await window.ZiprooAuth.signIn({ email, password, remember });
+
+      if (res.error) {
+        if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+        showFeedback(res.error.message || 'Authentication failed. Please verify credentials.', 'error');
+        return;
+      }
+
+      showFeedback('Authentication verified! Redirecting to Ziproo Enterprise...', 'success');
+      showToast('Welcome back! Initializing workspace...', 'verified_user');
+
+      setTimeout(() => {
+        const dest = targetRedirect ? decodeURIComponent(targetRedirect) : 'home.html';
+        window.location.href = dest;
+      }, 500);
+    });
+
+    // Form: User Sign Up / Registration
+    document.getElementById('form-user-signup')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearFeedback();
+
+      const fullName = document.getElementById('signup-name')?.value.trim();
+      const email = document.getElementById('signup-email')?.value.trim();
+      const password = document.getElementById('signup-password')?.value;
+      const confirmPassword = document.getElementById('signup-confirm-password')?.value;
+      const terms = document.getElementById('signup-terms')?.checked;
+      const btn = document.getElementById('btn-user-signup-submit');
+      const origText = btn ? btn.innerHTML : '';
+
+      const errName = document.getElementById('err-signup-name');
+      const errEmail = document.getElementById('err-signup-email');
+      const errPwd = document.getElementById('err-signup-password');
+      const errConfirm = document.getElementById('err-signup-confirm');
+      const errTerms = document.getElementById('err-signup-terms');
+
+      if (errName) errName.classList.add('hidden');
+      if (errEmail) errEmail.classList.add('hidden');
+      if (errPwd) errPwd.classList.add('hidden');
+      if (errConfirm) errConfirm.classList.add('hidden');
+      if (errTerms) errTerms.classList.add('hidden');
+
+      let hasError = false;
+
+      if (!fullName) {
+        if (errName) { errName.textContent = 'Full legal name required'; errName.classList.remove('hidden'); }
+        hasError = true;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        if (errEmail) { errEmail.textContent = 'Valid email address required'; errEmail.classList.remove('hidden'); }
+        hasError = true;
+      }
+      if (!password || password.length < 8) {
+        if (errPwd) { errPwd.textContent = 'Password must be at least 8 characters'; errPwd.classList.remove('hidden'); }
+        hasError = true;
+      }
+      if (password !== confirmPassword) {
+        if (errConfirm) { errConfirm.textContent = 'Passwords do not match. Please re-enter.'; errConfirm.classList.remove('hidden'); }
+        hasError = true;
+      }
+      if (!terms) {
+        if (errTerms) { errTerms.textContent = 'You must agree to the identity terms'; errTerms.classList.remove('hidden'); }
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Provisioning Sovereign Identity...</span>';
+      }
+
+      const res = await window.ZiprooAuth.signUp({
+        fullName,
+        email,
+        password,
+        confirmPassword,
+        remember: true
+      });
+
+      if (res.error) {
+        if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+        showFeedback(res.error.message || 'Registration failed.', 'error');
+        return;
+      }
+
+      showFeedback('Identity provisioned successfully! Redirecting to Home...', 'success');
+      showToast('Account created! Welcome to Ziproo.', 'how_to_reg');
+
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 500);
+    });
+
+    // Form: Admin Login (Server Verified)
+    document.getElementById('form-admin-login')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearFeedback();
+
+      const email = document.getElementById('admin-email')?.value.trim();
+      const password = document.getElementById('admin-password')?.value;
+      const mfaToken = document.getElementById('admin-mfa')?.value.trim();
+      const btn = document.getElementById('btn-admin-login-submit');
+      const origText = btn ? btn.innerHTML : '';
+
+      const errEmail = document.getElementById('err-admin-email');
+      const errPwd = document.getElementById('err-admin-password');
+      if (errEmail) errEmail.classList.add('hidden');
+      if (errPwd) errPwd.classList.add('hidden');
+
+      if (!email) {
+        if (errEmail) { errEmail.textContent = 'Admin ID or Email is required'; errEmail.classList.remove('hidden'); }
+        return;
+      }
+      if (!password) {
+        if (errPwd) { errPwd.textContent = 'Master Keyphrase is required'; errPwd.classList.remove('hidden'); }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Verifying Root Clearance with Server...</span>';
+      }
+
+      const res = await window.ZiprooAuth.adminSignIn({ email, password, mfaToken });
+
+      if (res.error) {
+        if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+        showFeedback(res.error.message || 'Access Denied: Administrator clearance rejected.', 'error');
+        return;
+      }
+
+      showFeedback('Admin clearance verified by server! Initializing Operations Console...', 'success');
+      showToast('Admin session authorized. Launching console...', 'admin_panel_settings');
+
+      setTimeout(() => {
+        window.location.href = 'admin.html';
+      }, 500);
+    });
+
+    // Form: Forgot Password
+    document.getElementById('form-forgot-password')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearFeedback();
+
+      const email = document.getElementById('forgot-email')?.value.trim();
+      const btn = document.getElementById('btn-forgot-submit');
+      const origText = btn ? btn.innerHTML : '';
+      const errEl = document.getElementById('err-forgot-email');
+      if (errEl) errEl.classList.add('hidden');
+
+      if (!email) {
+        if (errEl) { errEl.textContent = 'Please enter your registered email'; errEl.classList.remove('hidden'); }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Dispatching recovery...</span>';
+      }
+
+      const res = await window.ZiprooAuth.resetPassword(email);
+
+      if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+
+      if (res.error) {
+        showFeedback(res.error.message, 'error');
+      } else {
+        showFeedback(res.data?.message || 'Password recovery instructions dispatched to your email.', 'success');
+        showToast('Recovery dispatch initiated', 'send');
+      }
+    });
   }
 
   // Page-specific interaction engines
@@ -897,7 +1294,9 @@
   }
 
   function initPageInteractions(pageId) {
-    if (pageId === 'home') {
+    if (pageId === 'auth') {
+      initAuthGatewayInteractions();
+    } else if (pageId === 'home') {
       initHomeInteractions();
     } else if (pageId === 'branches') {
       initBranchesInteractions();
@@ -1055,6 +1454,11 @@
     initPasswordToggles();
     syncAuthUI();
     initUniversalInteractions();
+    initAuthGatewayInteractions();
+
+    if (window.ZiprooAuth && typeof window.ZiprooAuth.enforceRouteGuard === 'function') {
+      window.ZiprooAuth.enforceRouteGuard();
+    }
 
     // Cache initial main content and sync active navbar tabs
     const initialPath = window.location.pathname || '/';

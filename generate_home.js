@@ -523,11 +523,18 @@ function buildHome() {
       e.target.reset();
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/social-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if (window.ZiprooAuth) window.ZiprooAuth.enforceRouteGuard();
+  </script>
 </body>
 </html>`;
 
-  fs.writeFileSync('index.html', page);
-  console.log('Built index.html successfully!');
+  fs.writeFileSync('home.html', page);
+  console.log('Built home.html successfully!');
 }
 
 buildHome();

@@ -4,7 +4,8 @@
   "description": "Ziproo Corporate Web UI - Sovereign Identity & Enterprise Architecture",
   "scripts": {
     "dev": "node dev-server.js",
-    "start": "node dev-server.js"
+    "start": "node dev-server.js",
+    "build": "node -e \"console.log('Ziproo static distribution ready')\""
   },
   "keywords": [
     "ziproo",

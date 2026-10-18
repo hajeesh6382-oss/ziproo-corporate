@@ -1,11 +1,21 @@
 {
   "cleanUrls": true,
+  "outputDirectory": ".",
   "rewrites": [
+    { "source": "/api/verify-admin", "destination": "/api/verify-admin.js" },
+    { "source": "/home", "destination": "/home.html" },
+    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/branches", "destination": "/branches.html" },
     { "source": "/updates", "destination": "/updates.html" },
     { "source": "/leadership", "destination": "/leaders.html" },
+    { "source": "/leaders", "destination": "/leaders.html" },
     { "source": "/connect", "destination": "/portal.html" },
+    { "source": "/portal", "destination": "/portal.html" },
     { "source": "/projects", "destination": "/projects.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/signup", "destination": "/index.html" },
+    { "source": "/admin-login", "destination": "/index.html" },
+    { "source": "/auth", "destination": "/index.html" },
+    { "source": "/reset-password", "destination": "/reset-password.html" }
   ]
 }
