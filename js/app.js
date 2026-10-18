@@ -571,11 +571,15 @@
     '/projects.html': { file: 'projects.html', id: 'projects', title: 'Portfolio & Deployments - Ziproo Enterprise Architecture' }
   };
 
+  const BASE_PATH = window.location.pathname.startsWith('/ziproo-corporate') ? '/ziproo-corporate' : '';
   const pageCache = {};
 
   function normalizeRoute(path) {
     if (!path) return '/';
     let clean = path.split('?')[0].split('#')[0];
+    if (clean.startsWith('/ziproo-corporate')) {
+      clean = clean.replace(/^\/ziproo-corporate/, '') || '/';
+    }
     if (clean === '' || clean === '/home') return '/';
     if (clean === '/leaders') return '/leadership';
     if (clean === '/portal') return '/connect';
@@ -656,8 +660,9 @@
     const cleanRoute = normalizeRoute(path);
     const routeConfig = ROUTE_MAP[cleanRoute] || ROUTE_MAP['/'];
 
-    if (push && window.location.pathname !== cleanRoute) {
-      window.history.pushState({ route: cleanRoute }, '', cleanRoute);
+    const targetUrl = (BASE_PATH + cleanRoute) || '/';
+    if (push && window.location.pathname !== targetUrl) {
+      window.history.pushState({ route: cleanRoute }, '', targetUrl);
     }
 
     updateActiveNavTabs(routeConfig.id);
@@ -666,7 +671,8 @@
     let cached = pageCache[routeConfig.file];
     if (!cached) {
       try {
-        const resp = await fetch(routeConfig.file);
+        const fetchTarget = BASE_PATH ? `${BASE_PATH}/${routeConfig.file}` : routeConfig.file;
+        const resp = await fetch(fetchTarget);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const html = await resp.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -676,7 +682,8 @@
         pageCache[routeConfig.file] = cached;
       } catch (err) {
         console.warn('Router fetch fallback:', err);
-        window.location.href = routeConfig.file;
+        const fallbackTarget = BASE_PATH ? `${BASE_PATH}/${routeConfig.file}` : routeConfig.file;
+        window.location.href = fallbackTarget;
         return;
       }
     }
