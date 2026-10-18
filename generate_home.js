@@ -158,6 +158,13 @@ function buildHome() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Ziproo Corporate - Sovereign Identity & Enterprise Architecture</title>
   <meta name="description" content="Pioneering next-generation identity solutions, enterprise architectures, and bespoke brand platforms since 2026."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/"/>
+  <meta property="og:url" content="https://ziproo.vercel.app/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Ziproo Corporate - Sovereign Identity & Enterprise Architecture"/>
+  <meta property="og:description" content="Pioneering next-generation identity solutions, enterprise architectures, and bespoke brand platforms since 2026."/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://ziproo.vercel.app/"/>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>

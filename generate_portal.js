@@ -9,6 +9,13 @@ function buildPortal() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Connect with ZIPROO - Official Social Media & Community Gateway</title>
   <meta name="description" content="Follow and connect with ZIPROO across our official global social media channels: YouTube, Instagram, LinkedIn, X (Twitter), and WhatsApp."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/connect"/>
+  <meta property="og:url" content="https://ziproo.vercel.app/connect"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Connect with ZIPROO - Official Social Media & Community Gateway"/>
+  <meta property="og:description" content="Follow and connect with ZIPROO across our official global social media channels: YouTube, Instagram, LinkedIn, X (Twitter), and WhatsApp."/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://ziproo.vercel.app/connect"/>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>

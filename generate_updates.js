@@ -19,6 +19,13 @@ function buildUpdates() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>About & Daily Updates - Ziproo Enterprise Architecture</title>
   <meta name="description" content="Archival ledger, sovereign foundation, and daily protocol intelligence feed from Ziproo executive engineering."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/updates"/>
+  <meta property="og:url" content="https://ziproo.vercel.app/updates"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="About & Daily Updates - Ziproo Enterprise Architecture"/>
+  <meta property="og:description" content="Archival ledger, sovereign foundation, and daily protocol intelligence feed from Ziproo executive engineering."/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://ziproo.vercel.app/updates"/>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>

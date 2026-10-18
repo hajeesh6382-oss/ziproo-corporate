@@ -23,6 +23,13 @@ function buildLeaders() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Executive Leadership - Ziproo Enterprise Architecture</title>
   <meta name="description" content="Meet the visionaries, cryptographers, and system engineers forging the future of digital identity at Ziproo."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/leadership"/>
+  <meta property="og:url" content="https://ziproo.vercel.app/leadership"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Executive Leadership - Ziproo Enterprise Architecture"/>
+  <meta property="og:description" content="Meet the visionaries, cryptographers, and system engineers forging the future of digital identity at Ziproo."/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://ziproo.vercel.app/leadership"/>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>

@@ -5,6 +5,7 @@
     { "source": "/updates", "destination": "/updates.html" },
     { "source": "/leadership", "destination": "/leaders.html" },
     { "source": "/connect", "destination": "/portal.html" },
-    { "source": "/projects", "destination": "/projects.html" }
+    { "source": "/projects", "destination": "/projects.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

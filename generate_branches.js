@@ -23,6 +23,13 @@ function buildBranches() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Global Branches & Locations - Ziproo Enterprise Architecture</title>
   <meta name="description" content="Discover Ziproo's global hubs and innovation centers driving sovereign identity protocols across 4 continents."/>
+  <link rel="canonical" href="https://ziproo.vercel.app/branches"/>
+  <meta property="og:url" content="https://ziproo.vercel.app/branches"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Global Branches & Locations - Ziproo Enterprise Architecture"/>
+  <meta property="og:description" content="Discover Ziproo's global hubs and innovation centers driving sovereign identity protocols across 4 continents."/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://ziproo.vercel.app/branches"/>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
