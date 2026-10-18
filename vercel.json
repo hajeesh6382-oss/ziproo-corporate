@@ -1,0 +1,10 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/branches", "destination": "/branches.html" },
+    { "source": "/updates", "destination": "/updates.html" },
+    { "source": "/leadership", "destination": "/leaders.html" },
+    { "source": "/connect", "destination": "/portal.html" },
+    { "source": "/projects", "destination": "/projects.html" }
+  ]
+}

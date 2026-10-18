@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title id="page-title">Project Detail - Ziproo Corporate Architecture</title>
+  <meta name="description" content="Detailed architecture specs, cryptographic benchmarks, and live telemetry for Ziproo deployed enterprise project."/>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-container": "#a3a4a4",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#8c1900",
+            "on-tertiary-fixed": "#1a1c1c",
+            "tertiary": "#232525",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#f9f9f9",
+            "on-background": "#1a1c1c",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f3",
+            "error": "#ba1a1a",
+            "surface-tint": "#5f5e5e",
+            "on-error": "#ffffff",
+            "inverse-primary": "#c8c6c6",
+            "outline": "#747878",
+            "on-secondary-container": "#570c00",
+            "surface-container": "#eeeeee",
+            "inverse-surface": "#2f3131",
+            "primary-fixed": "#e4e2e1",
+            "surface-variant": "#e2e2e2",
+            "on-primary-container": "#a5a4a3",
+            "inverse-on-surface": "#f1f1f1",
+            "on-surface": "#1a1c1c",
+            "surface-container-highest": "#e2e2e2",
+            "surface": "#f9f9f9",
+            "tertiary-fixed-dim": "#c6c6c6",
+            "secondary": "#b52603",
+            "on-secondary-fixed": "#3d0600",
+            "secondary-fixed": "#ffdad2",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e8e8e8",
+            "tertiary-container": "#383a3b",
+            "surface-dim": "#dadada",
+            "on-tertiary-fixed-variant": "#454747",
+            "on-primary": "#ffffff",
+            "on-primary-fixed-variant": "#474747",
+            "outline-variant": "#c4c7c7",
+            "primary-container": "#3a3a3a",
+            "on-primary-fixed": "#1b1c1c",
+            "background": "#f9f9f9",
+            "primary-fixed-dim": "#c8c6c6",
+            "secondary-container": "#fd5835",
+            "tertiary-fixed": "#e2e2e2",
+            "secondary-fixed-dim": "#ffb4a3",
+            "primary": "#242525",
+            "on-surface-variant": "#444748"
+          },
+          fontFamily: {
+            "headline-xl": ["Outfit"],
+            "headline-lg": ["Outfit"],
+            "headline-md": ["Outfit"],
+            "headline-sm": ["Outfit"],
+            "tagline-display": ["Outfit"],
+            "display": ["Outfit"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"]
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl border-b border-outline-variant/30 transition-colors">
+    <div class="max-w-6xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img alt="Ziproo Official Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="assets/asset_1.webp"/>
+        <div class="flex flex-col">
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none font-bold">Ziproo</span>
+          <span class="font-tagline-display text-[9px] text-secondary tracking-widest uppercase leading-none mt-0.5">Enterprise Architecture</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1 bg-surface-container-low/70 px-2 py-1 rounded-2xl border border-outline-variant/20 shadow-inner">
+        <a href="index.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">Home</a>
+        <a href="branches.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">Branches</a>
+        <a href="updates.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">About and Updates</a>
+        <a href="leaders.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">Leadership</a>
+        <a href="portal.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">Connect</a>
+        <a href="projects.html" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-secondary font-semibold bg-secondary/10">Projects</a>
+        <a href="auth.html" id="nav-desktop-signin" class="text-label-md font-medium px-3 py-2 rounded-xl transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container">Sign In</a>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2">
+        <button aria-label="Toggle Theme" data-action="toggle-theme" class="min-w-[38px] min-h-[38px] flex items-center justify-center rounded-xl bg-surface-container-high/60 text-on-surface-variant transition-all hover:bg-surface-container-highest hover:text-on-surface active:scale-90" type="button">
+          <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+        </button>
+        <a href="projects.html" class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high text-xs font-semibold transition-all">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Projects</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page-transition flex-1 flex flex-col relative w-full pt-20 pb-28 md:pb-16 bg-surface">
+    <div class="max-w-4xl mx-auto w-full px-4 sm:px-6 space-y-8 pt-4">
+
+      <!-- Breadcrumbs & Back Button -->
+      <div class="flex items-center justify-between">
+        <nav class="flex items-center gap-2 text-xs text-outline font-medium">
+          <a href="index.html" class="hover:text-primary transition-colors">Home</a>
+          <span class="text-outline-variant">/</span>
+          <a href="projects.html" class="hover:text-primary transition-colors">Projects</a>
+          <span class="text-outline-variant">/</span>
+          <span id="breadcrumb-title" class="text-primary font-semibold">Kinetix Identity Hub</span>
+        </nav>
+        <a href="projects.html" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface text-xs font-semibold hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Projects</span>
+        </a>
+      </div>
+
+      <!-- Hero Banner Image & Status -->
+      <div class="relative w-full h-64 sm:h-80 rounded-3xl overflow-hidden bg-primary shadow-xl">
+        <img id="detail-img" class="w-full h-full object-cover opacity-90" alt="Project Architecture Visual" src="assets/asset_3.webp"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent"></div>
+        <div class="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-on-primary">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span id="detail-status-pill" class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary font-label-sm text-[10px] font-bold">
+                LIVE DEPLOYMENT
+              </span>
+              <span id="detail-version-pill" class="px-2 py-0.5 rounded-full bg-surface-container-lowest/20 backdrop-blur-md text-[10px] font-mono">
+                v4.2 Alpha
+              </span>
+            </div>
+            <h1 id="detail-title" class="font-headline-xl text-2xl sm:text-4xl font-bold tracking-tight text-white">
+              Kinetix Identity Hub
+            </h1>
+            <p id="detail-tagline" class="font-body-sm text-xs sm:text-sm text-primary-fixed max-w-lg leading-relaxed">
+              Zero-latency biometric authentication engine with quantum-resistant key encryptions.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="Ziproo.showToast('Access request dispatched to administrator', 'verified')" type="button" class="px-4 py-2.5 rounded-xl bg-secondary-container text-on-secondary text-xs font-semibold shadow-md active:scale-95 transition-all">
+              Request Access
+            </button>
+            <button onclick="Ziproo.showToast('Zero-trust architecture whitepaper download started', 'download')" type="button" class="px-3.5 py-2.5 rounded-xl bg-surface-container-lowest/20 hover:bg-surface-container-lowest/30 backdrop-blur-md text-white text-xs font-semibold transition-all">
+              Whitepaper
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <section class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-1">
+          <span class="text-[10px] text-outline font-bold uppercase tracking-wider">Uptime SLA</span>
+          <span id="stat-uptime" class="font-headline-sm text-xl font-bold text-on-surface">99.995%</span>
+          <span class="text-[10px] text-emerald-600 font-medium">Air-gapped failover</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-1">
+          <span class="text-[10px] text-outline font-bold uppercase tracking-wider">Handshake Latency</span>
+          <span id="stat-latency" class="font-headline-sm text-xl font-bold text-secondary">14.2ms</span>
+          <span class="text-[10px] text-outline font-medium">Global p99 average</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-1">
+          <span class="text-[10px] text-outline font-bold uppercase tracking-wider">Encryption Core</span>
+          <span id="stat-crypt" class="font-headline-sm text-xl font-bold text-on-surface">Kyber-1024</span>
+          <span class="text-[10px] text-outline font-medium">NIST Post-Quantum</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col gap-1">
+          <span class="text-[10px] text-outline font-bold uppercase tracking-wider">Verified Nodes</span>
+          <span id="stat-nodes" class="font-headline-sm text-xl font-bold text-on-surface">1,420</span>
+          <span class="text-[10px] text-emerald-600 font-medium">Across 24 branches</span>
+        </div>
+      </section>
+
+      <!-- Technical Architecture Overview -->
+      <section class="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant/30 space-y-6">
+        <div>
+          <h2 class="font-headline-sm text-lg sm:text-xl font-bold text-on-surface mb-2">Technical Specification</h2>
+          <p id="detail-full-desc" class="font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Kinetix is Ziproo's flagship sovereign identity execution environment. Built upon non-custodial cryptographic primitives, it transforms hardware facial biometrics and secure enclaves into universally verifiable Zero-Knowledge proofs without ever transmitting raw biometric telemetry over public backbones.
+          </p>
+        </div>
+
+        <!-- Capability checklist -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-low">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">verified_user</span>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface">Zero-Knowledge Key Handshake</h4>
+              <p class="text-[11px] text-on-surface-variant">Credentials validated on client enclaves without leaking secrets.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-low">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">security</span>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface">SOC2 Type II &amp; ISO-27001</h4>
+              <p class="text-[11px] text-on-surface-variant">Audited by top cryptographic security consortia in 2026.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-low">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">sync_saved_locously</span>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface">High-Availability Geo Replication</h4>
+              <p class="text-[11px] text-on-surface-variant">Live telemetry sync across SF, London, Berlin, and Singapore hubs.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-surface-container-low">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">token</span>
+            <div>
+              <h4 class="text-xs font-bold text-on-surface">OpenID Foundation &amp; W3C DID</h4>
+              <p class="text-[11px] text-on-surface-variant">Full interoperability with international sovereign identity standards.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lead Architect Card -->
+        <div class="p-4 rounded-2xl bg-surface-container flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <img class="w-12 h-12 rounded-xl object-cover" alt="Lead Architect" src="assets/asset_6.webp"/>
+            <div class="flex flex-col">
+              <span class="text-xs font-bold text-on-surface">Elena Rostova</span>
+              <span class="text-[11px] text-secondary font-medium">Founder &amp; Chief Executive Officer</span>
+              <span class="text-[10px] text-outline">Lead Protocol Architect • Ex-CyberSec Global</span>
+            </div>
+          </div>
+          <a href="leaders.html" class="px-3 py-1.5 rounded-xl bg-surface-container-lowest hover:bg-secondary hover:text-white text-xs font-semibold transition-colors">
+            Meet Executive
+          </a>
+        </div>
+      </section>
+
+      <!-- Bottom CTAs -->
+      <div class="flex items-center justify-between pt-4">
+        <a href="projects.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-secondary hover:underline">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Explore All 5 Projects</span>
+        </a>
+        <button onclick="Ziproo.showToast('Telemetry feed connected: 99.98% sync rate', 'insights')" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:opacity-90 transition-all">
+          <span class="material-symbols-outlined text-[16px]">insights</span>
+          <span>View Live Telemetry</span>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto border-t border-outline-variant/30 bg-surface-container-lowest/50 text-on-surface-variant py-8 text-center text-xs">
+    Ziproo Corporate Architecture • Sovereign Project Registry © 2026
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Dynamic project population from URL parameter
+    (function initProjectDetail() {
+      const PROJECTS_DB = {
+        kinetix: {
+          title: "Kinetix Identity Hub",
+          tagline: "Zero-latency biometric authentication engine with quantum-resistant key encryptions.",
+          img: "assets/asset_3.webp",
+          status: "LIVE DEPLOYMENT",
+          version: "v4.2 Alpha",
+          uptime: "99.995%",
+          latency: "14.2ms",
+          crypt: "Kyber-1024",
+          nodes: "1,420",
+          desc: "Kinetix is Ziproo's flagship sovereign identity execution environment. Built upon non-custodial cryptographic primitives, it transforms hardware facial biometrics and secure enclaves into universally verifiable Zero-Knowledge proofs without ever transmitting raw biometric telemetry over public backbones."
+        },
+        nova: {
+          title: "Nova Brand Engine",
+          tagline: "Automated brand guideline compiler and SVG token exporter for modern product conglomerates.",
+          img: "assets/asset_4.webp",
+          status: "SYNTHESIS ENGINE",
+          version: "Stable v3.0",
+          uptime: "99.980%",
+          latency: "8.5ms",
+          crypt: "AES-256-GCM",
+          nodes: "860",
+          desc: "Nova Brand Engine synthesizes corporate design tokens, deterministic color palettes, and component states into immutable cryptographic assets. Integrated with decentralized storage networks, it allows global design systems to propagate versioned updates in milliseconds."
+        },
+        aegis: {
+          title: "Aegis Core Security",
+          tagline: "Decentralized verifiable credential storage utilizing zero-knowledge rollups and air-gapped nodes.",
+          img: "assets/asset_5.webp",
+          status: "VAULT SECURE",
+          version: "Tier IV",
+          uptime: "99.999%",
+          latency: "21.0ms",
+          crypt: "Dilithium-5",
+          nodes: "2,150",
+          desc: "Aegis provides ultra-secure enterprise vault custody backed by threshold multi-signature nodes. Designed for financial institutions and defense infrastructure, Aegis prevents unauthorized key extractions through hardware-level air-gaps and zero-trust verification."
+        },
+        helix: {
+          title: "Helix ZK Vault",
+          tagline: "Multi-signature zero-knowledge key vault with threshold cryptography for sovereign identity custody.",
+          img: "assets/asset_9.webp",
+          status: "PROTOCOL READY",
+          version: "v2.1 Beta",
+          uptime: "99.990%",
+          latency: "16.8ms",
+          crypt: "BLS12-381",
+          nodes: "980",
+          desc: "Helix ZK Vault implements cutting-edge polynomial commitments and threshold signature schemes. It enables institutional users to execute high-value transactions with 5-of-7 distributed signer consensus across sovereign jurisdictions."
+        },
+        quantum: {
+          title: "Quantum Mesh Protocol",
+          tagline: "Post-quantum lattice cryptography mesh enabling instant peer-to-peer verifiable credentials.",
+          img: "assets/asset_10.webp",
+          status: "RESEARCH PHASE",
+          version: "Experimental",
+          uptime: "99.900%",
+          latency: "12.0ms",
+          crypt: "NTRU-HPS",
+          nodes: "420",
+          desc: "Quantum Mesh Protocol is Ziproo's next-frontier cryptographic mesh. Resilient against quantum computer attacks, it establishes zero-latency ad-hoc identity verifications for autonomous edge devices and smart enterprise hardware."
+        }
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const id = (params.get('id') || 'kinetix').toLowerCase();
+      const proj = PROJECTS_DB[id] || PROJECTS_DB.kinetix;
+
+      document.getElementById('page-title').textContent = `${proj.title} - Ziproo Corporate Architecture`;
+      document.getElementById('breadcrumb-title').textContent = proj.title;
+      document.getElementById('detail-title').textContent = proj.title;
+      document.getElementById('detail-tagline').textContent = proj.tagline;
+      document.getElementById('detail-full-desc').textContent = proj.desc;
+      document.getElementById('detail-img').src = proj.img;
+      document.getElementById('detail-status-pill').textContent = proj.status;
+      document.getElementById('detail-version-pill').textContent = proj.version;
+      document.getElementById('stat-uptime').textContent = proj.uptime;
+      document.getElementById('stat-latency').textContent = proj.latency;
+      document.getElementById('stat-crypt').textContent = proj.crypt;
+      document.getElementById('stat-nodes').textContent = proj.nodes;
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "ziproo-corporate-website",
+  "version": "1.0.0",
+  "description": "Ziproo Corporate Web UI - Sovereign Identity & Enterprise Architecture",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "ziproo",
+    "corporate",
+    "identity",
+    "architecture",
+    "stitch"
+  ],
+  "author": "Ziproo Engineering",
+  "license": "ISC"
+}
