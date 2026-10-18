@@ -109,11 +109,15 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Ziproo Corporate Web UI running at http://localhost:${PORT}`);
-  if (process.env.SUPABASE_URL) {
-    console.log(`Connected to Supabase URL: ${process.env.SUPABASE_URL}`);
-  } else {
-    console.log(`Supabase backend ready for configuration (via browser settings or .env)`);
-  }
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Ziproo Corporate Web UI running at http://localhost:${PORT}`);
+    if (process.env.SUPABASE_URL) {
+      console.log(`Connected to Supabase URL: ${process.env.SUPABASE_URL}`);
+    } else {
+      console.log(`Supabase backend ready for configuration (via browser settings or .env)`);
+    }
+  });
+}
+
+module.exports = server;
