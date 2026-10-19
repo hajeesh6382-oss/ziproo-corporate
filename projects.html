@@ -227,7 +227,7 @@
   </div>
 
   <!-- Main Content: Projects Page -->
-  <main class="page-transition flex-1 flex flex-col relative w-full pt-20 pb-28 md:pb-16 bg-surface">
+  <main class="page-transition flex-1 flex flex-col relative w-full pt-20 pb-16 bg-surface">
     <div class="max-w-6xl mx-auto w-full px-4 sm:px-6 space-y-8">
 
       <!-- Breadcrumbs & Back Button -->
@@ -259,7 +259,7 @@
         </div>
 
         <!-- + Add Project Button (Admin Only) -->
-        <button onclick="Ziproo.openModal('modal-add-project')" type="button" class="admin-only hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container text-on-secondary font-label-md font-bold text-xs shadow-md hover:bg-secondary active:scale-95 transition-all self-start md:self-auto">
+        <button onclick="Ziproo.openModal('modal-add-project')" type="button" class="admin-only hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container text-on-secondary font-label-md font-bold text-xs shadow-md hover:bg-secondary active:scale-95 transition-all self-start md:self-auto" style="display: none !important;">
           <span class="material-symbols-outlined text-[18px]">add_circle</span>
           <span>+ Add Project</span>
         </button>
@@ -291,7 +291,7 @@
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span class="font-label-sm text-[10px] font-bold text-on-surface">LIVE DEPLOYMENT</span>
             </div>
-            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
               <button onclick="Ziproo.openModal('modal-add-project')" aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
                 <span class="material-symbols-outlined text-[16px]">edit</span>
               </button>
@@ -332,7 +332,7 @@
               <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
               <span class="font-label-sm text-[10px] font-bold text-on-surface">SYNTHESIS ENGINE</span>
             </div>
-            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
               <button onclick="Ziproo.openModal('modal-add-project')" aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
                 <span class="material-symbols-outlined text-[16px]">edit</span>
               </button>
@@ -371,7 +371,7 @@
               <span class="w-2 h-2 rounded-full bg-primary-container"></span>
               <span class="font-label-sm text-[10px] font-bold text-on-surface">VAULT SECURE</span>
             </div>
-            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+            <div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
               <button onclick="Ziproo.openModal('modal-add-project')" aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
                 <span class="material-symbols-outlined text-[16px]">edit</span>
               </button>
@@ -504,34 +504,7 @@
   </div>
 
   <!-- Bottom Mobile Dock -->
-  <nav class="md:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-    <div class="h-16 px-1 flex items-center justify-around">
-      <a href="index.html" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span class="font-label-sm text-[10px]">Home</span>
-      </a>
-      <a href="branches.html" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">store</span>
-        <span class="font-label-sm text-[10px]">Branches</span>
-      </a>
-      <a href="updates.html" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">feed</span>
-        <span class="font-label-sm text-[10px]">Updates</span>
-      </a>
-      <a href="leaders.html" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
-        <span class="font-label-sm text-[10px]">Leaders</span>
-      </a>
-      <a href="portal.html" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">share</span>
-        <span class="font-label-sm text-[10px]">Connect</span>
-      </a>
-      <a href="auth.html" id="dock-auth-link" class="min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]" id="dock-auth-icon">login</span>
-        <span class="font-label-sm text-[10px]" id="dock-auth-label">Sign In</span>
-      </a>
-    </div>
-  </nav>
+  
 
   <!-- Footer -->
   <footer class="mt-auto border-t border-outline-variant/30 bg-surface-container-lowest/50 text-on-surface-variant py-10 px-4 sm:px-6">

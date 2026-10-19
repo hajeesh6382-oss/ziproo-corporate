@@ -171,30 +171,8 @@ function getHeader(activeId, pageTitle) {
 }
 
 function getBottomDock(activeId) {
-  const normalizedActiveId = activeId === 'leaders' ? 'leadership' : activeId;
-  const items = NAV_ITEMS.map(item => {
-    const isActive = item.id === normalizedActiveId;
-    return `
-      <a href="${item.href}" data-route="${item.route}" data-tab="${item.id}" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors ${
-        isActive ? 'text-secondary font-semibold' : 'text-on-surface-variant hover:text-on-surface'
-      }">
-        <span class="material-symbols-outlined text-[20px]">${item.icon}</span>
-        <span class="font-label-sm text-[10px]">${item.label}</span>
-      </a>
-    `;
-  }).join('');
-
-  return `
-    <nav class="md:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-      <div class="h-16 px-1 flex items-center justify-around">
-        ${items}
-        <a href="/#auth-section" data-route="/#auth-section" id="dock-auth-link" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-          <span class="material-symbols-outlined text-[20px]" id="dock-auth-icon">login</span>
-          <span class="font-label-sm text-[10px]" id="dock-auth-label">Sign In</span>
-        </a>
-      </div>
-    </nav>
-  `;
+  // Completely removed per user request so header navigation options are not repeated at the bottom of the page
+  return '';
 }
 
 function getFooter(activeId) {
@@ -209,13 +187,8 @@ function getFooter(activeId) {
           <p class="font-body-sm text-[12px] text-outline max-w-sm">Next-generation identity protocols, sovereign enterprise infrastructure, and global community.</p>
         </div>
         
-        <!-- Navbar & Other Links -->
+        <!-- Footer Links (Header navigation options removed from bottom per request) -->
         <div class="flex items-center gap-4 sm:gap-6 font-label-sm text-label-sm flex-wrap justify-center">
-          <a href="/home" data-route="/home" data-tab="home" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'home' ? 'text-secondary font-bold' : ''}">Home</a>
-          <a href="/branches" data-route="/branches" data-tab="branches" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'branches' ? 'text-secondary font-bold' : ''}">Branches</a>
-          <a href="/updates" data-route="/updates" data-tab="updates" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'updates' ? 'text-secondary font-bold' : ''}">Updates</a>
-          <a href="/leadership" data-route="/leadership" data-tab="leadership" class="footer-nav-tab hover:text-primary transition-colors ${(activeId === 'leaders' || activeId === 'leadership') ? 'text-secondary font-bold' : ''}">Leadership</a>
-          <a href="/connect" data-route="/connect" data-tab="connect" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'connect' ? 'text-secondary font-bold' : ''}">Connect</a>
           <a href="/projects" data-route="/projects" data-tab="projects" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'projects' ? 'text-secondary font-bold' : ''}">Our Projects</a>
           <a href="/#auth-section" data-route="/#auth-section" id="footer-auth-link" class="hover:text-primary transition-colors">Sign In</a>
         </div>

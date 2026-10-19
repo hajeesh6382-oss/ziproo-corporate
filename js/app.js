@@ -85,12 +85,23 @@
   }
 
   function applyAdminMode(isAdmin) {
-    localStorage.setItem(ADMIN_KEY, isAdmin ? 'true' : 'false');
+    if (isAdmin) {
+      localStorage.setItem(ADMIN_KEY, 'true');
+    } else {
+      localStorage.removeItem(ADMIN_KEY);
+      localStorage.removeItem(ADMIN_TOKEN_KEY);
+      sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+    }
 
-    // Hide/show admin mode toggles
+    // Hide/show admin mode toggles (completely hidden for non-admins)
     document.querySelectorAll('[data-action="toggle-admin"]').forEach(btn => {
-      btn.style.display = isAdmin ? '' : 'none';
-      if (!isAdmin) btn.classList.add('hidden');
+      if (isAdmin) {
+        btn.classList.remove('hidden');
+        btn.style.display = '';
+      } else {
+        btn.classList.add('hidden');
+        btn.style.setProperty('display', 'none', 'important');
+      }
     });
 
     // Update Header Role Badges
@@ -103,43 +114,40 @@
       if (ping) {
         ping.className = `w-2 h-2 rounded-full ${isAdmin ? 'bg-emerald-500' : 'bg-secondary-container'} animate-pulse`;
       }
+      if (!isAdmin) {
+        badge.classList.add('hidden');
+        badge.style.setProperty('display', 'none', 'important');
+      } else {
+        badge.classList.remove('hidden');
+        badge.style.display = '';
+      }
     });
 
     // Render all edit/add/delete controls ONLY when isAdmin is true (completely hidden from DOM flow, not merely disabled)
-    document.querySelectorAll('.admin-only, .admin-only-badge, [data-admin-only="true"]').forEach(el => {
+    const adminElementSelectors = [
+      '.admin-only',
+      '.admin-only-badge',
+      '.admin-action-btn',
+      '.admin-item-menu',
+      '#btn-add-project',
+      '#toggleDemoEmpty',
+      '[data-action="edit"]',
+      '[data-action="delete"]',
+      '[data-action="add"]',
+      '[data-admin-only="true"]'
+    ];
+
+    document.querySelectorAll(adminElementSelectors.join(', ')).forEach(el => {
       if (isAdmin) {
-        el.classList.remove('hidden');
+        el.classList.remove('hidden', 'opacity-60', 'pointer-events-none');
         el.style.display = '';
+        el.removeAttribute('disabled');
       } else {
         el.classList.add('hidden');
-        el.style.display = 'none';
+        el.style.setProperty('display', 'none', 'important');
+        el.setAttribute('disabled', 'true');
       }
     });
-
-    // Edit, add, delete action buttons & entry menus
-    document.querySelectorAll('.admin-action-btn, .admin-item-menu, [data-action="edit"], [data-action="delete"]').forEach(btn => {
-      if (isAdmin) {
-        btn.classList.remove('hidden', 'opacity-60', 'pointer-events-none');
-        btn.removeAttribute('disabled');
-        btn.style.display = '';
-      } else {
-        btn.classList.add('hidden');
-        btn.style.display = 'none';
-        btn.setAttribute('disabled', 'true');
-      }
-    });
-
-    // Add project button
-    const btnAddProject = document.getElementById('btn-add-project');
-    if (btnAddProject) {
-      if (isAdmin) {
-        btnAddProject.classList.remove('hidden');
-        btnAddProject.style.display = '';
-      } else {
-        btnAddProject.classList.add('hidden');
-        btnAddProject.style.display = 'none';
-      }
-    }
 
     // Reveal desktop Admin Dashboard link in navbar
     const adminNavLink = document.getElementById('nav-desktop-admin');
@@ -947,6 +955,7 @@
         return;
       }
 
+      applyAdminMode(false);
       showFeedback('Authentication verified! Redirecting to Ziproo Enterprise...', 'success');
       showToast('Welcome back! Initializing workspace...', 'verified_user');
 
@@ -1026,6 +1035,7 @@
         return;
       }
 
+      applyAdminMode(false);
       showFeedback('Identity provisioned successfully! Redirecting to Home...', 'success');
       showToast('Account created! Welcome to Ziproo.', 'how_to_reg');
 
@@ -1344,13 +1354,18 @@
 
   // --- Initialize Universal Listeners ---
   function initUniversalInteractions() {
-    // 1. Admin mode toggles
+    // 1. Admin mode toggles (Strictly restricted to verified admins)
     document.querySelectorAll('[data-action="toggle-admin"]').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (!window.ZiprooAuth || !window.ZiprooAuth.isVerifiedAdmin()) {
+          showToast('Access Denied: Administrator clearance is required.', 'lock');
+          applyAdminMode(false);
+          return;
+        }
         const cur = isAdminMode();
         applyAdminMode(!cur);
         showToast(
-          !cur ? 'Elevated to Enterprise Admin Preview (Edit mode ON)' : 'Reverted to Standard Visitor Mode',
+          !cur ? 'Elevated to Enterprise Admin Preview' : 'Reverted to Standard Mode',
           !cur ? 'admin_panel_settings' : 'verified_user'
         );
       });

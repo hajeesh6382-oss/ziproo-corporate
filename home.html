@@ -273,7 +273,7 @@
     </div>
   
 
-  <main class="flex-1 flex flex-col relative w-full pt-16 pb-28 md:pb-16 bg-surface">
+  <main class="flex-1 flex flex-col relative w-full pt-16 pb-16 bg-surface">
     <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 space-y-6 pt-4">
       <div class="flex flex-col w-full px-margin-sm space-y-space-lg">
 <!-- Hero & Identity Art Section -->
@@ -470,7 +470,7 @@
 <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">Our Projects</h2>
 </div>
 <!-- Add Project CTA (Only functional/lit for Admins) -->
-<button class="px-3.5 py-2 rounded-xl bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm active:scale-95 transition-all" id="btn-add-project" type="button">
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm active:scale-95 transition-all admin-only hidden" style="display: none !important;" id="btn-add-project" type="button" style="display: none !important;">
 <span class="material-symbols-outlined text-[18px] text-secondary">add_circle</span>
 <span>New Project</span>
 </button>
@@ -486,7 +486,7 @@
 <span class="font-label-sm text-[11px] font-semibold text-on-surface">LIVE DEPLOYMENT</span>
 </div>
 <!-- Admin Quick Action Toolbar (Shown when Admin active) -->
-<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
 <button aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
 <span class="material-symbols-outlined text-[16px]">edit</span>
 </button>
@@ -524,7 +524,7 @@
 <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
 <span class="font-label-sm text-[11px] font-semibold text-on-surface">SYNTHESIS ENGINE</span>
 </div>
-<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
 <button aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
 <span class="material-symbols-outlined text-[16px]">edit</span>
 </button>
@@ -560,7 +560,7 @@
 <span class="w-2 h-2 rounded-full bg-primary-container"></span>
 <span class="font-label-sm text-[11px] font-semibold text-on-surface">VAULT SECURE</span>
 </div>
-<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg">
+<div class="admin-only-badge hidden absolute top-3 right-3 flex items-center gap-1.5 bg-primary/90 backdrop-blur-md p-1 rounded-lg" style="display: none !important;">
 <button aria-label="Edit project" class="w-7 h-7 flex items-center justify-center rounded text-surface hover:text-secondary-container" type="button">
 <span class="material-symbols-outlined text-[16px]">edit</span>
 </button>
@@ -693,11 +693,6 @@
         
         <!-- Navbar & Other Links -->
         <div class="flex items-center gap-4 sm:gap-6 font-label-sm text-label-sm flex-wrap justify-center">
-          <a href="/home" data-route="/home" data-tab="home" class="footer-nav-tab hover:text-primary transition-colors ">Home</a>
-          <a href="/branches" data-route="/branches" data-tab="branches" class="footer-nav-tab hover:text-primary transition-colors ">Branches</a>
-          <a href="/updates" data-route="/updates" data-tab="updates" class="footer-nav-tab hover:text-primary transition-colors ">Updates</a>
-          <a href="/leadership" data-route="/leadership" data-tab="leadership" class="footer-nav-tab hover:text-primary transition-colors ">Leadership</a>
-          <a href="/connect" data-route="/connect" data-tab="connect" class="footer-nav-tab hover:text-primary transition-colors ">Connect</a>
           <a href="/projects" data-route="/projects" data-tab="projects" class="footer-nav-tab hover:text-primary transition-colors ">Our Projects</a>
           <a href="/#auth-section" data-route="/#auth-section" id="footer-auth-link" class="hover:text-primary transition-colors">Sign In</a>
         </div>
@@ -724,40 +719,7 @@
     </footer>
   
   
-    <nav class="md:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-      <div class="h-16 px-1 flex items-center justify-around">
-        
-      <a href="/home" data-route="/home" data-tab="home" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-secondary font-semibold">
-        <span class="material-symbols-outlined text-[20px]">home</span>
-        <span class="font-label-sm text-[10px]">Home</span>
-      </a>
     
-      <a href="/branches" data-route="/branches" data-tab="branches" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">store</span>
-        <span class="font-label-sm text-[10px]">Branches</span>
-      </a>
-    
-      <a href="/updates" data-route="/updates" data-tab="updates" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">description</span>
-        <span class="font-label-sm text-[10px]">Updates</span>
-      </a>
-    
-      <a href="/leadership" data-route="/leadership" data-tab="leadership" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
-        <span class="font-label-sm text-[10px]">Leadership</span>
-      </a>
-    
-      <a href="/connect" data-route="/connect" data-tab="connect" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">share</span>
-        <span class="font-label-sm text-[10px]">Connect</span>
-      </a>
-    
-        <a href="/#auth-section" data-route="/#auth-section" id="dock-auth-link" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-          <span class="material-symbols-outlined text-[20px]" id="dock-auth-icon">login</span>
-          <span class="font-label-sm text-[10px]" id="dock-auth-label">Sign In</span>
-        </a>
-      </div>
-    </nav>
   
 
   <!-- Project Creation Modal (Admin Mode) -->

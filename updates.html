@@ -273,7 +273,7 @@
     </div>
   
 
-  <main class="flex-1 flex flex-col relative w-full pt-16 pb-28 md:pb-16 bg-surface">
+  <main class="flex-1 flex flex-col relative w-full pt-16 pb-16 bg-surface">
     <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 space-y-6 pt-4">
       <div class="flex flex-col w-full">
 <div class="px-gutter-sm pt-space-md pb-space-lg flex flex-col gap-space-lg">
@@ -297,7 +297,7 @@
 </div>
 <span class="font-tagline-display text-[10px] text-secondary-fixed-dim uppercase tracking-widest font-bold">Foundation</span>
 </div>
-<button class="admin-action-btn flex items-center gap-1 text-label-sm text-on-primary-container hover:text-on-primary transition-colors py-1 px-2 rounded-md hover:bg-surface-variant/10" type="button">
+<button class="admin-action-btn flex items-center gap-1 text-label-sm text-on-primary-container hover:text-on-primary transition-colors py-1 px-2 rounded-md hover:bg-surface-variant/10 admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[16px]">edit</span>
 <span class="font-label-sm">Edit Vision</span>
 </button>
@@ -315,7 +315,7 @@
 </div>
 <span class="font-tagline-display text-[10px] text-secondary tracking-widest uppercase font-bold">Execution</span>
 </div>
-<button class="admin-action-btn flex items-center gap-1 text-label-sm text-on-surface-variant hover:text-secondary transition-colors py-1 px-2 rounded-md hover:bg-surface-container-low" type="button">
+<button class="admin-action-btn flex items-center gap-1 text-label-sm text-on-surface-variant hover:text-secondary transition-colors py-1 px-2 rounded-md hover:bg-surface-container-low admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[16px]">edit</span>
 <span class="font-label-sm">Edit Mission</span>
 </button>
@@ -340,7 +340,7 @@
 <h3 class="font-headline-sm text-headline-sm text-primary">Daily Updates &amp; Dispatch</h3>
 <p class="font-label-sm text-on-surface-variant mt-0.5">Live protocol intelligence feed</p>
 </div>
-<button aria-label="Post New Update" class="admin-action-btn min-h-[44px] px-3.5 py-2 rounded-xl bg-secondary-container text-on-secondary flex items-center gap-1.5 shadow-md hover:bg-secondary transition-all active:scale-95" type="button">
+<button aria-label="Post New Update" class="admin-action-btn min-h-[44px] px-3.5 py-2 rounded-xl bg-secondary-container text-on-secondary flex items-center gap-1.5 shadow-md hover:bg-secondary transition-all active:scale-95 admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[18px]">add</span>
 <span class="font-label-sm text-label-sm font-semibold">Post Update</span>
 </button>
@@ -357,7 +357,7 @@
                 OCT 24, 2026 • 09:30 AM
               </span>
 <div class="relative">
-<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors" type="button">
+<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[18px]">more_vert</span>
 </button>
 <div class="menu-dropdown hidden absolute right-0 top-full mt-1 bg-surface-container-lowest shadow-xl rounded-xl py-1.5 z-30 min-w-[120px]">
@@ -390,7 +390,7 @@
                 OCT 23, 2026 • 04:15 PM
               </span>
 <div class="relative">
-<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors" type="button">
+<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[18px]">more_vert</span>
 </button>
 <div class="menu-dropdown hidden absolute right-0 top-full mt-1 bg-surface-container-lowest shadow-xl rounded-xl py-1.5 z-30 min-w-[120px]">
@@ -423,7 +423,7 @@
                 OCT 20, 2026 • 11:00 AM
               </span>
 <div class="relative">
-<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors" type="button">
+<button aria-label="Entry options" class="admin-item-menu p-1 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-colors admin-only hidden" style="display: none !important;" type="button">
 <span class="material-symbols-outlined text-[18px]">more_vert</span>
 </button>
 <div class="menu-dropdown hidden absolute right-0 top-full mt-1 bg-surface-container-lowest shadow-xl rounded-xl py-1.5 z-30 min-w-[120px]">
@@ -494,11 +494,6 @@
         
         <!-- Navbar & Other Links -->
         <div class="flex items-center gap-4 sm:gap-6 font-label-sm text-label-sm flex-wrap justify-center">
-          <a href="/home" data-route="/home" data-tab="home" class="footer-nav-tab hover:text-primary transition-colors ">Home</a>
-          <a href="/branches" data-route="/branches" data-tab="branches" class="footer-nav-tab hover:text-primary transition-colors ">Branches</a>
-          <a href="/updates" data-route="/updates" data-tab="updates" class="footer-nav-tab hover:text-primary transition-colors ">Updates</a>
-          <a href="/leadership" data-route="/leadership" data-tab="leadership" class="footer-nav-tab hover:text-primary transition-colors ">Leadership</a>
-          <a href="/connect" data-route="/connect" data-tab="connect" class="footer-nav-tab hover:text-primary transition-colors ">Connect</a>
           <a href="/projects" data-route="/projects" data-tab="projects" class="footer-nav-tab hover:text-primary transition-colors ">Our Projects</a>
           <a href="/#auth-section" data-route="/#auth-section" id="footer-auth-link" class="hover:text-primary transition-colors">Sign In</a>
         </div>
@@ -525,40 +520,7 @@
     </footer>
   
   
-    <nav class="md:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-      <div class="h-16 px-1 flex items-center justify-around">
-        
-      <a href="/home" data-route="/home" data-tab="home" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">home</span>
-        <span class="font-label-sm text-[10px]">Home</span>
-      </a>
     
-      <a href="/branches" data-route="/branches" data-tab="branches" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">store</span>
-        <span class="font-label-sm text-[10px]">Branches</span>
-      </a>
-    
-      <a href="/updates" data-route="/updates" data-tab="updates" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-secondary font-semibold">
-        <span class="material-symbols-outlined text-[20px]">description</span>
-        <span class="font-label-sm text-[10px]">Updates</span>
-      </a>
-    
-      <a href="/leadership" data-route="/leadership" data-tab="leadership" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
-        <span class="font-label-sm text-[10px]">Leadership</span>
-      </a>
-    
-      <a href="/connect" data-route="/connect" data-tab="connect" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors text-on-surface-variant hover:text-on-surface">
-        <span class="material-symbols-outlined text-[20px]">share</span>
-        <span class="font-label-sm text-[10px]">Connect</span>
-      </a>
-    
-        <a href="/#auth-section" data-route="/#auth-section" id="dock-auth-link" class="dock-nav-tab min-w-[44px] min-h-[44px] flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface">
-          <span class="material-symbols-outlined text-[20px]" id="dock-auth-icon">login</span>
-          <span class="font-label-sm text-[10px]" id="dock-auth-label">Sign In</span>
-        </a>
-      </div>
-    </nav>
   
 
   <!-- Post Update Modal (Admin) -->
