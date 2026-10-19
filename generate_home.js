@@ -15,106 +15,9 @@ function buildHome() {
 
   // Upgrade the Interactive Auth Card to support Supabase Auth
   const oldAuthCardRegex = /<!-- Interactive Auth Card[\s\S]*?<\/section>/i;
-  const newAuthCard = `<!-- Interactive Auth Card & Authenticated Main Dashboard -->
+  const newAuthCard = `<!-- Authenticated Main Dashboard -->
 <section class="w-full scroll-mt-24" id="auth-section">
-  <!-- GUEST PANEL (Shown when visitor is not logged in) -->
-  <div id="home-guest-panel" class="w-full bg-surface-container-lowest rounded-3xl p-6 sm:p-7 shadow-md border border-outline-variant/30">
-    
-    <!-- Redirect Notice (Triggered when unauthenticated user tries to visit protected page) -->
-    <div id="home-auth-redirect-banner" class="hidden mb-5 p-4 rounded-2xl bg-secondary-container/10 border border-secondary-container/30 text-on-surface flex items-start gap-3">
-      <span class="material-symbols-outlined text-secondary-container text-[22px] shrink-0 mt-0.5">lock</span>
-      <div class="flex flex-col gap-0.5">
-        <span class="font-bold text-xs text-secondary-container">Authentication Required</span>
-        <p class="text-xs text-on-surface-variant leading-relaxed">
-          Access to enterprise Branches, Updates feed, and Leadership suite is reserved for verified members. Please sign in or create an account to unlock full access.
-        </p>
-      </div>
-    </div>
-
-    <!-- Tabs Segmented Control -->
-    <div class="grid grid-cols-2 p-1.5 rounded-2xl bg-surface-container mb-5">
-      <button class="py-2.5 rounded-xl font-label-md text-label-md transition-all text-on-surface bg-surface-container-lowest shadow-sm flex items-center justify-center gap-1.5 font-semibold" id="tab-btn-signin" type="button">
-        <span class="material-symbols-outlined text-[18px]">lock_open</span>
-        <span>Sign In</span>
-      </button>
-      <button class="py-2.5 rounded-xl font-label-md text-label-md transition-all text-on-surface-variant flex items-center justify-center gap-1.5 font-medium" id="tab-btn-signup" type="button">
-        <span class="material-symbols-outlined text-[18px]">person_add</span>
-        <span>Create Account</span>
-      </button>
-    </div>
-
-    <div id="home-auth-feedback" class="hidden text-xs p-3 rounded-xl mb-4"></div>
-
-    <!-- Sign In Tab Form -->
-    <form id="home-signin-form" class="space-y-4">
-      <div class="flex flex-col text-left">
-        <label class="font-label-sm text-label-sm text-on-surface-variant mb-1 ml-0.5 font-medium">Corporate Email</label>
-        <div class="relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">mail</span>
-          <input required id="home-signin-email" class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" placeholder="name@ziproo-network.io" type="email"/>
-        </div>
-      </div>
-      <div class="flex flex-col text-left">
-        <div class="flex justify-between items-center mb-1 ml-0.5">
-          <label class="font-label-sm text-label-sm text-on-surface-variant font-medium">Access Password</label>
-          <a class="font-label-sm text-label-sm text-secondary hover:underline" href="javascript:void(0)" id="home-forgot-pwd">Forgot?</a>
-        </div>
-        <div class="relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">key</span>
-          <input required id="home-signin-password" class="w-full h-12 pl-11 pr-11 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" placeholder="••••••••••••" type="password"/>
-          <button aria-label="Toggle password view" class="absolute right-3 text-outline hover:text-on-surface flex items-center justify-center p-1" id="toggle-pwd-btn" type="button">
-            <span class="material-symbols-outlined text-[20px]" id="toggle-pwd-icon">visibility</span>
-          </button>
-        </div>
-      </div>
-      <button id="home-btn-signin" class="w-full h-12 mt-2 rounded-xl bg-secondary-container text-on-secondary font-label-lg text-label-lg shadow-[0_8px_20px_-2px_rgba(253,88,53,0.35)] flex items-center justify-center gap-2 active:scale-[0.98] transition-all font-semibold" type="submit">
-        <span>Sign In to Ziproo</span>
-        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </button>
-
-      <div class="relative py-2 flex items-center justify-center">
-        <div class="w-full bg-surface-container-high h-[1px]"></div>
-        <span class="absolute px-3 bg-surface-container-lowest font-label-sm text-[11px] text-outline uppercase tracking-wider">or rapid test</span>
-      </div>
-
-      <button type="button" id="home-btn-demo" class="w-full h-11 rounded-xl bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-variant active:scale-[0.98] transition-all font-medium">
-        <span class="material-symbols-outlined text-[18px] text-primary">quick_reference</span>
-        <span>Fill Demo Member Credentials</span>
-      </button>
-    </form>
-
-    <!-- Sign Up Tab Form (Hidden initially) -->
-    <form id="home-signup-form" class="space-y-4 hidden">
-      <div class="flex flex-col text-left">
-        <label class="font-label-sm text-label-sm text-on-surface-variant mb-1 ml-0.5 font-medium">Full Legal Name</label>
-        <div class="relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">badge</span>
-          <input required id="home-signup-name" class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" placeholder="Sarah Jenkins" type="text"/>
-        </div>
-      </div>
-      <div class="flex flex-col text-left">
-        <label class="font-label-sm text-label-sm text-on-surface-variant mb-1 ml-0.5 font-medium">Corporate Email</label>
-        <div class="relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">alternate_email</span>
-          <input required id="home-signup-email" class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" placeholder="sarah@corp.com" type="email"/>
-        </div>
-      </div>
-      <div class="flex flex-col text-left">
-        <label class="font-label-sm text-label-sm text-on-surface-variant mb-1 ml-0.5 font-medium">Master Password</label>
-        <div class="relative flex items-center">
-          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">password</span>
-          <input required id="home-signup-password" class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-outline-variant" placeholder="Min. 8 characters" type="password"/>
-        </div>
-      </div>
-      <button id="home-btn-signup" class="w-full h-12 mt-2 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all font-semibold" type="submit">
-        <span>Create Enterprise Account</span>
-        <span class="material-symbols-outlined text-[18px]">verified</span>
-      </button>
-    </form>
-  </div>
-
-  <!-- AUTHENTICATED MAIN DASHBOARD (Dynamically shown when Supabase user is logged in) -->
-  <div id="home-loggedin-panel" class="hidden w-full bg-surface-container-lowest rounded-3xl p-6 sm:p-7 shadow-md border border-outline-variant/30 flex-col">
+  <div id="home-loggedin-panel" class="w-full bg-surface-container-lowest rounded-3xl p-6 sm:p-7 shadow-md border border-outline-variant/30 flex flex-col">
     <!-- Session Card with Cleared Badge & Controls -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div class="flex items-center gap-3.5">
@@ -124,21 +27,17 @@ function buildHome() {
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
             <span class="text-xs text-outline font-medium">Enterprise Session:</span>
-            <span class="user-display-name font-bold text-on-surface text-base">User</span>
+            <span class="user-display-name font-bold text-on-surface text-base">Member</span>
             <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-label-sm text-[10px] font-bold flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Cleared
             </span>
           </div>
-          <span class="user-display-email text-xs text-outline font-mono">user@example.com</span>
+          <span class="user-display-email text-xs text-outline font-mono">user@ziproo.com</span>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button type="button" data-action="open-supabase-config" class="hidden px-3.5 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-xs font-semibold items-center gap-1.5 transition-colors">
-          <span class="material-symbols-outlined text-[16px] text-emerald-600">database</span>
-          <span>Supabase Config</span>
-        </button>
-        <button type="button" data-action="supabase-signout" class="px-3.5 py-2 rounded-xl bg-error/10 text-error hover:bg-error/20 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+        <button type="button" data-action="logout" class="px-3.5 py-2 rounded-xl bg-error/10 text-error hover:bg-error/20 text-xs font-semibold flex items-center gap-1.5 transition-colors" title="Sign out of Ziproo">
           <span class="material-symbols-outlined text-[16px]">logout</span>
           <span>Sign Out</span>
         </button>
@@ -155,6 +54,24 @@ function buildHome() {
 <html class="h-full" lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- Zero-Trust Authentication Guard: Forces sign-in before revealing workspace or navigation -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('ziproo_user') || sessionStorage.getItem('ziproo_user');
+        if (!raw) {
+          window.location.replace('/');
+          return;
+        }
+        var user = JSON.parse(raw);
+        if (!user || !user.email) {
+          window.location.replace('/');
+        }
+      } catch (e) {
+        window.location.replace('/');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Ziproo Corporate - Sovereign Identity & Enterprise Architecture</title>
   <meta name="description" content="Pioneering next-generation identity solutions, enterprise architectures, and bespoke brand platforms since 2026."/>

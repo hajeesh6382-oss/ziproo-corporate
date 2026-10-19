@@ -2,6 +2,25 @@
 <html class="h-full" lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- Active Session Check: If already authenticated, redirect to workspace -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('ziproo_user') || sessionStorage.getItem('ziproo_user');
+        if (raw) {
+          var user = JSON.parse(raw);
+          if (user && user.email) {
+            var role = (user.role || '').toLowerCase();
+            if (role === 'admin') {
+              window.location.replace('/admin');
+            } else {
+              window.location.replace('/home');
+            }
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>ZIPROO - Sovereign Identity & Authentication Gateway</title>
   <meta name="description" content="Secure corporate authentication gateway and zero-trust identity architecture for Ziproo Enterprise Network."/>

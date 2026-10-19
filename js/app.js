@@ -411,8 +411,8 @@
     showToast('Logged out of Ziproo Network', 'logout');
     syncAuthUI();
     setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 350);
+      window.location.replace('/');
+    }, 250);
   }
 
   // --- Mobile Drawer Menu ---

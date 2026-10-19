@@ -131,7 +131,8 @@
     if (isAuthPage) {
       if (user) {
         // Authenticated user opening auth page -> redirect to destination
-        if (user.role === 'Admin') {
+        const role = (user.role || '').toLowerCase();
+        if (role === 'admin') {
           window.location.replace('admin.html');
         } else {
           window.location.replace('home.html');
@@ -145,8 +146,7 @@
     if (isCurrentPageProtected()) {
       if (!user) {
         // Unauthenticated visitor -> redirect to auth gateway
-        const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
-        window.location.replace(`index.html?auth=required&target=${returnUrl}`);
+        window.location.replace('/');
         return;
       }
 
@@ -342,7 +342,8 @@
     } else {
       sessionStorage.setItem(USER_KEY, str);
     }
-    if (user.role === 'Admin') {
+    const role = (user.role || '').toLowerCase();
+    if (role === 'admin') {
       localStorage.setItem(ADMIN_KEY, 'true');
     } else {
       localStorage.setItem(ADMIN_KEY, 'false');
@@ -366,7 +367,7 @@
     }
 
     setTimeout(() => {
-      window.location.href = 'index.html';
+      window.location.replace('/');
     }, 250);
   }
 

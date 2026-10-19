@@ -2,6 +2,24 @@
 <html class="h-full" lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- Zero-Trust Authentication Guard: Forces sign-in before revealing workspace or navigation -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('ziproo_user') || sessionStorage.getItem('ziproo_user');
+        if (!raw) {
+          window.location.replace('/');
+          return;
+        }
+        var user = JSON.parse(raw);
+        if (!user || !user.email) {
+          window.location.replace('/');
+        }
+      } catch (e) {
+        window.location.replace('/');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Our Projects & Deployments - Ziproo Corporate Architecture</title>
   <meta name="description" content="Explore Ziproo's sovereign enterprise portfolio: decentralized identity hubs, cryptographic engines, and security vaults."/>
@@ -124,11 +142,11 @@
         </button>
 
         <div id="header-auth-slot" class="hidden sm:flex items-center gap-2 ml-0.5">
-          <a href="auth.html" id="btn-header-signin" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-[12px] font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all">
+          <a href="auth.html" id="btn-header-signin" class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-[12px] font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all">
             <span class="material-symbols-outlined text-[16px]">login</span>
             <span>Sign In</span>
           </a>
-          <div id="header-user-badge" class="hidden items-center gap-2">
+          <div id="header-user-badge" class="items-center gap-2 flex">
             <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface text-xs font-semibold">
               <span id="header-user-avatar" class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center text-[10px] font-bold">U</span>
               <span id="header-user-name" class="max-w-[100px] truncate text-xs">Visitor</span>
@@ -162,11 +180,11 @@
       </div>
 
       <div id="drawer-auth-slot" class="w-full">
-        <a href="auth.html" id="drawer-signin-btn" class="w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
+        <a href="auth.html" id="drawer-signin-btn" class="hidden w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
           <span class="material-symbols-outlined text-[18px]">login</span>
           <span>Sign In / Create Account</span>
         </a>
-        <div id="drawer-user-info" class="hidden flex-col gap-2 p-3 rounded-2xl bg-surface-container-low mb-2 border border-outline-variant/30">
+        <div id="drawer-user-info" class="flex-col gap-2 p-3 rounded-2xl bg-surface-container-low mb-2 border border-outline-variant/30">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span id="drawer-user-avatar" class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center font-bold text-xs">U</span>
@@ -524,7 +542,7 @@
         <a href="leaders.html" class="hover:text-primary transition-colors">Leadership</a>
         <a href="portal.html" class="hover:text-primary transition-colors">Connect</a>
         <a href="projects.html" class="hover:text-primary transition-colors text-secondary font-bold">Our Projects</a>
-        <a href="auth.html" id="footer-auth-link" class="hover:text-primary transition-colors">Sign In</a>
+        <a href="javascript:void(0)" data-action="logout" id="footer-auth-link" class="hover:text-primary transition-colors">Logout</a>
       </div>
 
       <div class="flex items-center gap-3 text-on-surface-variant">

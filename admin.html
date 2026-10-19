@@ -2,6 +2,27 @@
 <html class="h-full" lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- Zero-Trust Admin Clearance Guard -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('ziproo_user') || sessionStorage.getItem('ziproo_user');
+        if (!raw) {
+          window.location.replace('/');
+          return;
+        }
+        var user = JSON.parse(raw);
+        var role = (user && user.role) ? user.role.toLowerCase() : '';
+        if (role !== 'admin') {
+          alert('Access Denied: Administrator clearance is required.');
+          window.location.replace('/home');
+          return;
+        }
+      } catch (e) {
+        window.location.replace('/');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Operations Console & Admin Control Room - Ziproo</title>
   <meta name="description" content="Tier IV Administrative Operations Console for Ziproo Sovereign Enterprise Architecture."/>
@@ -105,12 +126,36 @@
         </a>
       </div>
 
+      <!-- Desktop Navigation Bar (5 Primary Tabs + Admin Console) -->
+      <nav class="hidden md:flex items-center gap-1 bg-surface-container-low/70 px-2.5 py-1 rounded-2xl border border-outline-variant/20 shadow-inner ml-2 md:ml-4">
+        <a href="/home" data-route="/home" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[18px]">home</span>
+          <span>Home</span>
+        </a>
+        <a href="/branches" data-route="/branches" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[18px]">store</span>
+          <span>Branches</span>
+        </a>
+        <a href="/updates" data-route="/updates" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[18px]">description</span>
+          <span>Updates</span>
+        </a>
+        <a href="/leadership" data-route="/leadership" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+          <span>Leadership</span>
+        </a>
+        <a href="/connect" data-route="/connect" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[18px]">share</span>
+          <span>Connect</span>
+        </a>
+        <a href="/admin" data-route="/admin" class="nav-tab text-label-md font-medium px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-secondary font-bold bg-secondary-container/10">
+          <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+          <span>Console</span>
+        </a>
+      </nav>
+
       <!-- Navigation & Action Links -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="home.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-xs font-semibold transition-all">
-          <span class="material-symbols-outlined text-[16px]">public</span>
-          <span>View Website</span>
-        </a>
 
         <!-- Admin Badge -->
         <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold font-mono">
@@ -481,6 +526,27 @@
 
       renderUsers();
     })();
+  </script>
+  <script src="js/social-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.querySelectorAll('[data-action="logout"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('ziproo_user');
+        sessionStorage.removeItem('ziproo_user');
+        localStorage.removeItem('ziproo_admin_mode');
+        localStorage.removeItem('ziproo_admin_token');
+        sessionStorage.removeItem('ziproo_admin_token');
+        if (window.Ziproo?.showToast) {
+          window.Ziproo.showToast('Logged out of Ziproo Network', 'logout');
+        }
+        setTimeout(() => {
+          window.location.replace('/');
+        }, 200);
+      });
+    });
   </script>
 </body>
 </html>

@@ -67,17 +67,17 @@ function getHeader(activeId, pageTitle) {
             <span class="material-symbols-outlined text-[20px]">dark_mode</span>
           </button>
 
-          <!-- Dynamic Header Auth Slot (NO fake profile! Renders real auth state via Supabase) -->
-          <div id="header-auth-slot" class="hidden sm:flex items-center ml-0.5">
-            <a href="/#auth-section" data-route="/#auth-section" id="btn-header-signin" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-[12px] font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all" title="Sign In or Register on Home page">
+          <!-- Dynamic Header Auth Slot -->
+          <div id="header-auth-slot" class="flex items-center ml-0.5">
+            <a href="/" data-route="/" id="btn-header-signin" class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-[12px] font-semibold shadow-sm hover:opacity-90 active:scale-95 transition-all" title="Sign In">
               <span class="material-symbols-outlined text-[16px]">login</span>
               <span>Sign In</span>
             </a>
             
-            <div id="header-user-badge" class="hidden items-center gap-2">
+            <div id="header-user-badge" class="flex items-center gap-2">
               <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface text-xs font-semibold">
                 <span id="header-user-avatar" class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center text-[10px] font-bold">U</span>
-                <span id="header-user-name" class="max-w-[100px] truncate text-xs">Visitor</span>
+                <span id="header-user-name" class="max-w-[100px] truncate text-xs">Member</span>
               </div>
               <button type="button" data-action="logout" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-surface-container hover:bg-error/15 hover:text-error text-xs font-semibold transition-all" title="Sign Out">
                 <span class="material-symbols-outlined text-[16px]">logout</span>
@@ -110,16 +110,16 @@ function getHeader(activeId, pageTitle) {
 
         <!-- Dynamic Mobile Auth Slot -->
         <div id="drawer-auth-slot" class="w-full">
-          <a href="/" data-route="/" id="drawer-signin-btn" class="w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
+          <a href="/" data-route="/" id="drawer-signin-btn" class="hidden w-full mb-2 py-2.5 px-4 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center gap-2 text-label-sm font-semibold shadow-sm">
             <span class="material-symbols-outlined text-[18px]">login</span>
             <span>Sign In / Create Account</span>
           </a>
-          <div id="drawer-user-info" class="hidden flex-col gap-2 p-3 rounded-2xl bg-surface-container-low mb-2 border border-outline-variant/30">
+          <div id="drawer-user-info" class="flex flex-col gap-2 p-3 rounded-2xl bg-surface-container-low mb-2 border border-outline-variant/30">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span id="drawer-user-avatar" class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center font-bold text-xs">U</span>
                 <div class="flex flex-col">
-                  <span id="drawer-user-name" class="text-xs font-bold text-on-surface">Visitor</span>
+                  <span id="drawer-user-name" class="text-xs font-bold text-on-surface">Member</span>
                   <span id="drawer-user-email" class="text-[10px] text-outline font-mono">user@ziproo.com</span>
                 </div>
               </div>
@@ -190,7 +190,7 @@ function getFooter(activeId) {
         <!-- Footer Links (Header navigation options removed from bottom per request) -->
         <div class="flex items-center gap-4 sm:gap-6 font-label-sm text-label-sm flex-wrap justify-center">
           <a href="/projects" data-route="/projects" data-tab="projects" class="footer-nav-tab hover:text-primary transition-colors ${activeId === 'projects' ? 'text-secondary font-bold' : ''}">Our Projects</a>
-          <a href="/#auth-section" data-route="/#auth-section" id="footer-auth-link" class="hover:text-primary transition-colors">Sign In</a>
+          <a href="javascript:void(0)" data-action="logout" id="footer-auth-link" class="hover:text-primary transition-colors">Logout</a>
         </div>
 
         <!-- Social Media Icons (Working External Links) -->

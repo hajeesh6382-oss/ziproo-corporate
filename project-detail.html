@@ -2,6 +2,24 @@
 <html class="h-full" lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- Zero-Trust Authentication Guard: Forces sign-in before revealing workspace or navigation -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('ziproo_user') || sessionStorage.getItem('ziproo_user');
+        if (!raw) {
+          window.location.replace('/');
+          return;
+        }
+        var user = JSON.parse(raw);
+        if (!user || !user.email) {
+          window.location.replace('/');
+        }
+      } catch (e) {
+        window.location.replace('/');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title id="page-title">Project Detail - Ziproo Corporate Architecture</title>
   <meta name="description" content="Detailed architecture specs, cryptographic benchmarks, and live telemetry for Ziproo deployed enterprise project."/>
