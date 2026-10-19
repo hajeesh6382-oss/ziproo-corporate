@@ -77,28 +77,20 @@
   }
 
   function isAdminMode() {
+    if (window.ZiprooAuth && typeof window.ZiprooAuth.isAdmin === 'function') {
+      return window.ZiprooAuth.isAdmin();
+    }
     const user = getCurrentUser();
-    if (user && user.role === 'Admin') return true;
-    return localStorage.getItem(ADMIN_KEY) === 'true';
+    return !!(user && (user.role || '').toLowerCase() === 'admin');
   }
 
   function applyAdminMode(isAdmin) {
     localStorage.setItem(ADMIN_KEY, isAdmin ? 'true' : 'false');
 
-    // Update toggles and pill text
+    // Hide/show admin mode toggles
     document.querySelectorAll('[data-action="toggle-admin"]').forEach(btn => {
-      const label = btn.querySelector('.admin-toggle-label');
-      const dot = btn.querySelector('.admin-status-dot');
-      if (label) {
-        label.textContent = isAdmin ? 'Exit Admin' : 'Enable Admin';
-      }
-      if (dot) {
-        dot.className = `w-1.5 h-1.5 rounded-full ${isAdmin ? 'bg-secondary-container animate-pulse' : 'bg-outline'}`;
-      }
-      btn.classList.toggle('bg-secondary-container', isAdmin);
-      btn.classList.toggle('bg-primary', !isAdmin);
-      btn.classList.toggle('text-on-secondary', isAdmin);
-      btn.classList.toggle('text-on-primary', !isAdmin);
+      btn.style.display = isAdmin ? '' : 'none';
+      if (!isAdmin) btn.classList.add('hidden');
     });
 
     // Update Header Role Badges
@@ -106,31 +98,48 @@
       const text = badge.querySelector('.role-text');
       const ping = badge.querySelector('.role-ping');
       if (text) {
-        text.textContent = isAdmin ? 'Admin' : 'Visitor';
+        text.textContent = isAdmin ? 'Admin' : 'User';
       }
       if (ping) {
         ping.className = `w-2 h-2 rounded-full ${isAdmin ? 'bg-emerald-500' : 'bg-secondary-container'} animate-pulse`;
       }
     });
 
-    // Toggle Admin-only controls & badges
-    document.querySelectorAll('.admin-only-badge, .admin-only').forEach(el => {
+    // Render all edit/add/delete controls ONLY when isAdmin is true (completely hidden from DOM flow, not merely disabled)
+    document.querySelectorAll('.admin-only, .admin-only-badge, [data-admin-only="true"]').forEach(el => {
       if (isAdmin) {
         el.classList.remove('hidden');
-        el.classList.add('flex');
+        el.style.display = '';
       } else {
         el.classList.add('hidden');
-        el.classList.remove('flex');
+        el.style.display = 'none';
       }
     });
 
-    // Enable / disable admin action buttons
-    document.querySelectorAll('.admin-action-btn').forEach(btn => {
+    // Edit, add, delete action buttons & entry menus
+    document.querySelectorAll('.admin-action-btn, .admin-item-menu, [data-action="edit"], [data-action="delete"]').forEach(btn => {
       if (isAdmin) {
-        btn.classList.remove('opacity-60', 'pointer-events-none');
+        btn.classList.remove('hidden', 'opacity-60', 'pointer-events-none');
         btn.removeAttribute('disabled');
+        btn.style.display = '';
+      } else {
+        btn.classList.add('hidden');
+        btn.style.display = 'none';
+        btn.setAttribute('disabled', 'true');
       }
     });
+
+    // Add project button
+    const btnAddProject = document.getElementById('btn-add-project');
+    if (btnAddProject) {
+      if (isAdmin) {
+        btnAddProject.classList.remove('hidden');
+        btnAddProject.style.display = '';
+      } else {
+        btnAddProject.classList.add('hidden');
+        btnAddProject.style.display = 'none';
+      }
+    }
 
     // Reveal desktop Admin Dashboard link in navbar
     const adminNavLink = document.getElementById('nav-desktop-admin');
@@ -138,9 +147,11 @@
       if (isAdmin) {
         adminNavLink.classList.remove('hidden');
         adminNavLink.classList.add('inline-flex');
+        adminNavLink.style.display = '';
       } else {
         adminNavLink.classList.add('hidden');
         adminNavLink.classList.remove('inline-flex');
+        adminNavLink.style.display = 'none';
       }
     }
 
@@ -148,8 +159,10 @@
     if (drawerAdminLink) {
       if (isAdmin) {
         drawerAdminLink.classList.remove('hidden');
+        drawerAdminLink.style.display = '';
       } else {
         drawerAdminLink.classList.add('hidden');
+        drawerAdminLink.style.display = 'none';
       }
     }
   }
@@ -210,14 +223,9 @@
       }
 
       if (footerAuthLink) {
-        if (user.role === 'Admin') {
-          footerAuthLink.textContent = 'Admin Dashboard';
-          footerAuthLink.href = 'admin.html';
-        } else {
-          footerAuthLink.textContent = 'Logout';
-          footerAuthLink.href = 'javascript:void(0)';
-          footerAuthLink.setAttribute('data-action', 'logout');
-        }
+        footerAuthLink.textContent = 'Logout';
+        footerAuthLink.href = 'javascript:void(0)';
+        footerAuthLink.setAttribute('data-action', 'logout');
       }
 
       // Home page session banner & unlocked sections
@@ -459,6 +467,11 @@
 
   // --- Global Modals Management ---
   function openModal(id) {
+    const adminModals = ['modal-add-project', 'modal-add-branch', 'modal-add-update', 'modal-edit-leader', 'modal-edit-social', 'newProjectModal', 'postUpdateModal', 'addBranchModal', 'adminModal'];
+    if (adminModals.includes(id) && !isAdminMode()) {
+      showToast('Access Denied: Admin clearance required.', 'lock');
+      return;
+    }
     const modal = document.getElementById(id);
     if (modal) {
       modal.classList.remove('hidden');

@@ -71,6 +71,43 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Protected CRUD API Routes (Projects, Branches, Updates, Leaders)
+  const isProtectedApiRoute = ['/api/projects', '/api/branches', '/api/updates', '/api/leaders'].includes(cleanUrl);
+  if (isProtectedApiRoute) {
+    let bodyStr = '';
+    req.on('data', chunk => { bodyStr += chunk; });
+    req.on('end', () => {
+      try {
+        req.body = bodyStr ? JSON.parse(bodyStr) : {};
+      } catch (e) {
+        req.body = {};
+      }
+
+      // Read operations (GET) are public/read-only for guests and normal users
+      if (req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, message: 'Read-only access granted' }));
+      }
+
+      // Mutating operations (POST, PUT, DELETE, PATCH) are strictly admin-only
+      if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+        return verifyAdminHandler.requireAdmin(req, res, () => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            action: `${req.method} ${cleanUrl}`,
+            admin: req.adminUser.email,
+            message: 'Admin operation executed successfully'
+          }));
+        });
+      }
+
+      res.writeHead(405, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Method not allowed' }));
+    });
+    return;
+  }
+
   // API endpoints
   if (cleanUrl === '/api/supabase-config') {
     res.writeHead(200, {

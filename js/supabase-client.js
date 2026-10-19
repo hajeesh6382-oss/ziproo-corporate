@@ -60,22 +60,37 @@
 
   function isVerifiedAdmin() {
     const user = getCurrentUser();
-    if (!user || user.role !== 'Admin') return false;
+    if (!user) return false;
+    const role = (user.role || '').toLowerCase();
+    if (role !== 'admin') return false;
 
     // Check server token signature structure to prevent manual localStorage tampering
     const token = localStorage.getItem(ADMIN_TOKEN_KEY) || sessionStorage.getItem(ADMIN_TOKEN_KEY);
     if (!token) {
-      // In local demo mode, admin@ziproo.com with role Admin is accepted if logged in through admin flow
+      // In local demo mode, admin@ziproo.com with role admin is accepted if logged in through admin flow
       return user.email?.toLowerCase() === 'admin@ziproo.com';
     }
 
     try {
       const raw = atob(token);
       const parsed = JSON.parse(raw);
-      return parsed.role === 'Admin' && !!parsed.sig && (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000);
+      const parsedRole = (parsed.role || '').toLowerCase();
+      return parsedRole === 'admin' && !!parsed.sig && (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000);
     } catch (e) {
       return user.email?.toLowerCase() === 'admin@ziproo.com';
     }
+  }
+
+  function getAuthState() {
+    const user = getCurrentUser();
+    const role = user ? (user.role?.toLowerCase() === 'admin' ? 'admin' : 'user') : null;
+    const adminFlag = isVerifiedAdmin();
+    return {
+      user,
+      role,
+      isAdmin: adminFlag,
+      isAuthenticated: !!user
+    };
   }
 
   // --- Route Protection & Guards ---
@@ -171,7 +186,7 @@
             id: data.user.id,
             email: data.user.email,
             name: data.user.user_metadata?.full_name || cleanEmail.split('@')[0],
-            role: data.user.app_metadata?.role === 'admin' ? 'Admin' : 'Visitor'
+            role: data.user.app_metadata?.role?.toLowerCase() === 'admin' ? 'admin' : 'user'
           };
           saveSession(userObj, remember);
           return { data: { user: userObj }, error: null };
@@ -189,7 +204,7 @@
         const userObj = {
           name: found.name || 'Member',
           email: found.email,
-          role: found.role || 'Visitor'
+          role: (found.role && found.role.toLowerCase() === 'admin') ? 'admin' : 'user'
         };
         saveSession(userObj, remember);
         return { data: { user: userObj }, error: null };
@@ -198,7 +213,7 @@
 
     // 3. Demo Member Credentials
     if (cleanEmail === 'user@ziproo.com' && password === 'User@123') {
-      const userObj = { name: 'Verified Visitor', email: 'user@ziproo.com', role: 'Visitor' };
+      const userObj = { name: 'Verified Visitor', email: 'user@ziproo.com', role: 'user' };
       saveSession(userObj, remember);
       return { data: { user: userObj }, error: null };
     }
@@ -250,7 +265,7 @@
             id: data.user.id,
             email: cleanEmail,
             name: fullName.trim(),
-            role: 'Visitor'
+            role: 'user'
           };
           saveSession(userObj, remember);
           return { data: { user: userObj }, error: null };
@@ -270,12 +285,12 @@
         name: fullName.trim(),
         email: cleanEmail,
         password: password,
-        role: 'Visitor'
+        role: 'user'
       });
       localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(registered));
     } catch (e) {}
 
-    const userObj = { name: fullName.trim(), email: cleanEmail, role: 'Visitor' };
+    const userObj = { name: fullName.trim(), email: cleanEmail, role: 'user' };
     saveSession(userObj, remember);
     return { data: { user: userObj }, error: null };
   }
@@ -300,7 +315,8 @@
       }
 
       // Valid server session
-      const adminUser = result.user || { name: 'Admin Administrator', email: email.trim(), role: 'Admin' };
+      const adminUser = result.user || { name: 'Admin Administrator', email: email.trim(), role: 'admin' };
+      adminUser.role = 'admin';
       localStorage.setItem(ADMIN_TOKEN_KEY, result.token || 'demo-admin-token');
       saveSession(adminUser, true);
       localStorage.setItem(ADMIN_KEY, 'true');
@@ -309,12 +325,13 @@
     } catch (err) {
       // Offline fallback for local demo server
       if (email.trim().toLowerCase() === 'admin@ziproo.com' && password === 'Admin@123') {
-        const adminUser = { name: 'Admin Administrator', email: 'admin@ziproo.com', role: 'Admin' };
+        const adminUser = { name: 'Admin Administrator', email: 'admin@ziproo.com', role: 'admin' };
+        localStorage.setItem(ADMIN_TOKEN_KEY, 'demo-admin-token');
         saveSession(adminUser, true);
         localStorage.setItem(ADMIN_KEY, 'true');
         return { data: { user: adminUser }, error: null };
       }
-      return { error: { message: 'Failed to connect to verification server. Please ensure backend is running.' } };
+      return { error: { message: 'Failed to connect to Admin verification server.' } };
     }
   }
 
@@ -465,6 +482,8 @@
     signOut,
     resetPassword,
     getUser: getCurrentUser,
+    getState: getAuthState,
+    isAdmin: isVerifiedAdmin,
     isVerifiedAdmin,
     getConfig,
     openConfigModal,

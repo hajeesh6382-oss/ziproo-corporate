@@ -932,9 +932,9 @@
       const addProjectBtn = document.getElementById('btn-add-project');
       if (addProjectBtn) {
         addProjectBtn.addEventListener('click', () => {
-          const isAdmin = localStorage.getItem('ziproo_admin_mode') === 'true';
+          const isAdmin = window.ZiprooAuth ? window.ZiprooAuth.isAdmin() : false;
           if (!isAdmin) {
-            Ziproo.showToast('Please enable Admin Preview to add new projects', 'lock');
+            Ziproo.showToast('Access Denied: Admin clearance required to add projects', 'lock');
             return;
           }
           Ziproo.openModal('newProjectModal');

@@ -41,7 +41,7 @@ function verifyToken(token) {
   }
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -98,7 +98,7 @@ module.exports = async function handler(req, res) {
   }
 
   // Generate trusted server session token
-  const authToken = generateToken(foundAdmin.email, 'Admin');
+  const authToken = generateToken(foundAdmin.email, 'admin');
 
   return res.status(200).json({
     success: true,
@@ -106,8 +106,43 @@ module.exports = async function handler(req, res) {
     user: {
       name: foundAdmin.name,
       email: foundAdmin.email,
-      role: 'Admin'
+      role: 'admin'
     },
     message: 'Admin clearance verified by server.'
   });
-};
+}
+
+// Admin-check middleware for API routes
+function requireAdmin(req, res, next) {
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : (req.headers['x-admin-token'] || (req.body && req.body.token));
+
+  if (!token) {
+    res.statusCode = 403;
+    res.setHeader('Content-Type', 'application/json');
+    return res.end(JSON.stringify({ success: false, error: 'Forbidden: Admin clearance required' }));
+  }
+
+  const verification = verifyToken(token);
+  if (!verification.valid || (verification.role || '').toLowerCase() !== 'admin') {
+    res.statusCode = 403;
+    res.setHeader('Content-Type', 'application/json');
+    return res.end(JSON.stringify({ success: false, error: 'Forbidden: Admin clearance required' }));
+  }
+
+  req.adminUser = verification;
+  if (typeof next === 'function') {
+    next();
+  }
+}
+
+handler.requireAdmin = requireAdmin;
+handler.verifyToken = verifyToken;
+handler.generateToken = generateToken;
+
+module.exports = handler;
+module.exports.requireAdmin = requireAdmin;
+module.exports.verifyToken = verifyToken;
+module.exports.generateToken = generateToken;

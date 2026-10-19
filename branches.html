@@ -957,9 +957,9 @@
       document.querySelectorAll('button').forEach(b => {
         if (b.textContent.includes('Add New Branch')) {
           b.addEventListener('click', () => {
-            const isAdmin = localStorage.getItem('ziproo_admin_mode') === 'true';
+            const isAdmin = window.ZiprooAuth ? window.ZiprooAuth.isAdmin() : false;
             if (!isAdmin) {
-              Ziproo.showToast('Please enable Admin Preview to register branches', 'lock');
+              Ziproo.showToast('Access Denied: Admin clearance required to register branches', 'lock');
               return;
             }
             Ziproo.openModal('addBranchModal');

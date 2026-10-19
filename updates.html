@@ -605,9 +605,9 @@
       document.querySelectorAll('button').forEach(btn => {
         if (btn.textContent.includes('Post Update')) {
           btn.addEventListener('click', () => {
-            const isAdmin = localStorage.getItem('ziproo_admin_mode') === 'true';
+            const isAdmin = window.ZiprooAuth ? window.ZiprooAuth.isAdmin() : false;
             if (!isAdmin) {
-              Ziproo.showToast('Visitor access is read-only. Switch to Admin mode to continue.', 'lock');
+              Ziproo.showToast('Access Denied: Admin clearance required.', 'lock');
               return;
             }
             Ziproo.openModal('postUpdateModal');
@@ -619,9 +619,9 @@
       document.querySelectorAll('.admin-action-btn').forEach(btn => {
         if (btn.textContent.includes('Edit Vision') || btn.textContent.includes('Edit Mission')) {
           btn.addEventListener('click', () => {
-            const isAdmin = localStorage.getItem('ziproo_admin_mode') === 'true';
+            const isAdmin = window.ZiprooAuth ? window.ZiprooAuth.isAdmin() : false;
             if (!isAdmin) {
-              Ziproo.showToast('Visitor access is read-only. Switch to Admin mode to modify.', 'lock');
+              Ziproo.showToast('Access Denied: Admin clearance required.', 'lock');
               return;
             }
             const field = btn.textContent.includes('Vision') ? 'Vision' : 'Mission';

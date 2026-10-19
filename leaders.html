@@ -670,9 +670,9 @@
     let activeLeaderCard = null;
 
     function openAdminModal(name, role, bio, credentials) {
-      const isAdmin = localStorage.getItem('ziproo_admin_mode') === 'true';
+      const isAdmin = window.ZiprooAuth ? window.ZiprooAuth.isAdmin() : false;
       if (!isAdmin) {
-        Ziproo.showToast('Please enable Admin Preview to edit executive records', 'lock');
+        Ziproo.showToast('Access Denied: Admin clearance required to edit executive records', 'lock');
         return;
       }
 
